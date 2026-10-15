@@ -59,7 +59,7 @@ function Instalar-Office ($Tipo) {
 </Configuration>
 "@;
     $ArchivoXML = "$RutaTemp\config.xml";
-    $XML \vert{} Out-File -FilePath$ArchivoXML -Encoding UTF8;
+    [System.IO.File]::WriteAllText($ArchivoXML,$XML);
 
     Write-Host "Preparando instalador oficial de Microsoft ($Producto)..." -ForegroundColor Yellow;
     winget install --id Microsoft.OfficeDeploymentTool -e --accept-package-agreements --accept-source-agreements --location $RutaTemp | Out-Null;
@@ -163,12 +163,16 @@ foreach ($Cat in ($Categorias.Keys)) {$Grupo = New-Object System.Windows.Control
 
 # Acciones de los botones del Sidebar
 $BtnSeleccionarTodo.Add_Click({
-    foreach ($cb in$ListaCheckboxes) { $cb.IsChecked =$true; }
+    foreach ($cb in$ListaCheckboxes) { 
+        $cb.IsChecked =$true; 
+    }
     Actualizar-Contador;
 });
 
 $BtnLimpiar.Add_Click({
-    foreach ($cb in$ListaCheckboxes) { $cb.IsChecked =$false; }
+    foreach ($cb in$ListaCheckboxes) { 
+        $cb.IsChecked =$false; 
+    }
     Actualizar-Contador;
 });
 
@@ -183,7 +187,7 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in ($Seleccionados)) {
+    foreach ($Item in$Seleccionados) {
         Write-Host "`n==========================================" -ForegroundColor DarkGray;
         Write-Host "Instalando: $($Item.Content)..." -ForegroundColor Cyan;
         
