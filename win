@@ -23,19 +23,20 @@ $Categorias = [ordered]@{
         @{ Name = "Adobe Acrobat Reader"; Id = "Adobe.Acrobat.Reader.64-bit"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" }
     );
     "Suite ArtCraft (Clon de Adobe Suite)" = @(
-        @{ Name = "ArtCraft Launcher (Alternativa a Adobe Suite)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
+        @{ Name = "ArtCraft Launcher (Alternativa a Adobe Suite,PDFCraft, PhotoCraft, PhotoCraft y mas)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
     );
     "Seguridad y Antivirus" = @(
         @{ Name = "ESET Security / NOD32"; Id = "ESET.Security"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" }
     );
-    "Activadores y Licenciamiento" = @(
-        @{ Name = "Microsoft Activation Scripts (MAS) - Alternativo"; Id = "https://get.activated.win"; Type = "Script"; Icon = "https://www.google.com/s2/favicons?domain=massgrave.dev&sz=64" }
-    );
+    
     "Microsoft Office (Espanol)" = @(
         @{ Name = "Office 365"; Id = "OFFICE_365"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
         @{ Name = "Office 2024 ProPlus"; Id = "OFFICE_2024"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
         @{ Name = "Office 2021 ProPlus"; Id = "OFFICE_2021"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" }
-    )
+    );
+    "Activadores y Licenciamiento" = @(
+        @{ Name = "Microsoft Activation Scripts (MAS) - Alternativo"; Id = "https://get.activated.win"; Type = "Script"; Icon = "https://www.google.com/s2/favicons?domain=massgrave.dev&sz=64" }
+    );
 };
 
 # 2. FUNCION PARA INSTALAR OFFICE EN ESPAÑOL
@@ -146,7 +147,7 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
 
     $Contenedor = New-Object System.Windows.Controls.WrapPanel;
     
-    foreach ($App in$Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
+    foreach ($App in $Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
         $CB.Tag =$App.Id;
         $CB.ToolTip =$App.Type;
         $CB.Width = 320; # Ancho ampliado para evitar cortes en textos largos
@@ -212,10 +213,10 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in$Seleccionados) {
+    foreach ($Item in $Seleccionados) {
         # Extraer el nombre de la aplicación de forma limpia
         $NombreApp = "";
-        foreach ($child in$Item.Content.Children) {
+        foreach ($child in $Item.Content.Children) {
             if ($child -is [System.Windows.Controls.TextBlock]) {
                 $NombreApp =$child.Text;
             }
