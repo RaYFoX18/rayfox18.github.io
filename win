@@ -187,16 +187,14 @@ $BtnInstalar.Add_Click({
         Write-Host "`n==========================================" -ForegroundColor DarkGray;
         Write-Host "Instalando: $($Item.Content)..." -ForegroundColor Cyan;
         
-        $TipoInstalacion = $Item.ToolTip;
-
-        if ($TipoInstalacion -eq "Office") {
+        If ($Item.ToolTip -eq "Office") {
             Instalar-Office -Tipo $Item.Tag;
-        } elseif ($TipoInstalacion -eq "Url") {
+        } elseif ($Item.ToolTip -eq "Url") {
             $NombreArchivo = [System.IO.Path]::GetFileName($Item.Tag);
             $RutaDestino = "$env:TEMP\$NombreArchivo";
             Invoke-WebRequest -Uri $Item.Tag -OutFile $RutaDestino;
             Start-Process -FilePath $RutaDestino -Wait;
-        } elseif ($TipoInstalacion -eq "ArtCraft") {
+        } elseif ($Item.ToolTip -eq "ArtCraft") {
             Start-Process $Item.Tag;
             Write-Host "Abriendo la página oficial de ArtCraft..." -ForegroundColor Green;
         } else {
