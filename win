@@ -1,27 +1,26 @@
-Write-Host "Iniciando las herramientas de RaYFoX18..."
-Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName PresentationFramework;
 
 # 1. CATALOGO DE PROGRAMAS
 $Categorias = [ordered]@{
     "Navegadores" = @(
-        @{ Name = "Brave Browser"; Id = "Brave.Brave" }
-        @{ Name = "Google Chrome"; Id = "Google.Chrome" }
+        @{ Name = "Brave Browser"; Id = "Brave.Brave" },
+        @{ Name = "Google Chrome"; Id = "Google.Chrome" },
         @{ Name = "Mozilla Firefox"; Id = "Mozilla.Firefox" }
-    )
+    );
     "Desarrollo y Redes" = @(
-        @{ Name = "VS Code"; Id = "Microsoft.VisualStudioCode" }
-        @{ Name = "Git"; Id = "Git.Git" }
-        @{ Name = "XAMPP (PHP 8.2)"; Id = "ApacheFriends.Xampp.8.2" }
-        @{ Name = "WinBox (MikroTik)"; Id = "MikroTik.Winbox" }
+        @{ Name = "VS Code"; Id = "Microsoft.VisualStudioCode" },
+        @{ Name = "Git"; Id = "Git.Git" },
+        @{ Name = "XAMPP (PHP 8.2)"; Id = "ApacheFriends.Xampp.8.2" },
+        @{ Name = "WinBox (MikroTik)"; Id = "MikroTik.Winbox" },
         @{ Name = "AnyDesk"; Id = "AnyDeskSoftwareGmbH.AnyDesk" }
-    )
+    );
     "Comunicacion y Utilidades" = @(
-        @{ Name = "Telegram Desktop"; Id = "Telegram.TelegramDesktop" }
-        @{ Name = "VLC Media Player"; Id = "VideoLAN.VLC" }
-        @{ Name = "WinRAR"; Id = "RARLab.WinRAR" }
+        @{ Name = "Telegram Desktop"; Id = "Telegram.TelegramDesktop" },
+        @{ Name = "VLC Media Player"; Id = "VideoLAN.VLC" },
+        @{ Name = "WinRAR"; Id = "RARLab.WinRAR" },
         @{ Name = "Microsoft Office"; Id = "Microsoft.Office" }
     )
-}
+};
 
 # 2. DISEÑO VISUAL DE LA VENTANA (XAML)
 [xml]$XAML = @"
@@ -47,60 +46,61 @@ $Categorias = [ordered]@{
                 FontSize="15" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
     </Grid>
 </Window>
-"@
+"@;
 
-$Reader = New-Object System.Xml.XmlNodeReader $XAML
-$Ventana = [Windows.Markup.XamlReader]::Load($Reader)
-$PanelCategorias =$Ventana.FindName("PanelCategorias")
-$BtnInstalar =$Ventana.FindName("BtnInstalar")
+$Reader = New-Object System.Xml.XmlNodeReader $XAML;
+$Ventana = [Windows.Markup.XamlReader]::Load($Reader);
+$PanelCategorias =$Ventana.FindName("PanelCategorias");
+$BtnInstalar =$Ventana.FindName("BtnInstalar");
 
-$ListaCheckboxes = @()
+$ListaCheckboxes = @();
 
 # 3. GENERAR CATEGORIAS Y CASILLAS AUTOMATICAMENTE
-foreach ($Cat in ($Categorias.Keys)) {$Grupo = New-Object System.Windows.Controls.GroupBox
-    $Grupo.Header = " $Cat "
-    $Grupo.Foreground = "#38BDF8"
-    $Grupo.BorderBrush = "#3F3F46"
-    $Grupo.Margin = "0,0,0,12"
-    $Grupo.Padding = "8"
+foreach ($Cat in ($Categorias.Keys)) {$Grupo = New-Object System.Windows.Controls.GroupBox;
+    $Grupo.Header = " $Cat ";
+    $Grupo.Foreground = "#38BDF8";
+    $Grupo.BorderBrush = "#3F3F46";
+    $Grupo.Margin = "0,0,0,12";
+    $Grupo.Padding = "8";
 
-    $Contenedor = New-Object System.Windows.Controls.WrapPanel
+    $Contenedor = New-Object System.Windows.Controls.WrapPanel;
     
-    foreach ($App in ($Categorias[$Cat])) {$CB = New-Object System.Windows.Controls.CheckBox
-        $CB.Content =$App.Name
-        $CB.Tag =$App.Id
-        $CB.Foreground = "#F4F4F5"
-        $CB.Width = 180$CB.Margin = "6"
-        $CB.FontSize = 13
+    foreach ($App in ($Categorias[$Cat])) {$CB = New-Object System.Windows.Controls.CheckBox;
+        $CB.Content =$App.Name;
+        $CB.Tag =$App.Id;
+        $CB.Foreground = "#F4F4F5";
+        $CB.Width = 180;
+        $CB.Margin = "6";
+        $CB.FontSize = 13;
         
-        $Contenedor.Children.Add($CB) | Out-Null
-        $ListaCheckboxes +=$CB
+        $Contenedor.Children.Add($CB) | Out-Null;
+        $ListaCheckboxes +=$CB;
     }
 
-    $Grupo.Content =$Contenedor
-    $PanelCategorias.Children.Add($Grupo) | Out-Null
+    $Grupo.Content =$Contenedor;
+    $PanelCategorias.Children.Add($Grupo) | Out-Null;
 }
 
 # 4. ACCION DEL BOTON INSTALAR
 $BtnInstalar.Add_Click({
-    $Seleccionados =$ListaCheckboxes | Where-Object { $_.IsChecked -eq$true }
+    $Seleccionados =$ListaCheckboxes | Where-Object { $_.IsChecked -eq$true };
     
     if ($Seleccionados.Count -eq 0) {
-        [System.Windows.MessageBox]::Show("Marca al menos un programa para instalar.", "Aviso")
-        return
+        [System.Windows.MessageBox]::Show("Marca al menos un programa para instalar.", "Aviso");
+        return;
     }
 
-    $Ventana.Close()
+    $Ventana.Close();
 
     foreach ($Item in ($Seleccionados)) {
-        Write-Host "`n==========================================" -ForegroundColor DarkGray
-        Write-Host "Instalando: $($Item.Content)..." -ForegroundColor Cyan
-        winget install --id $Item.Tag -e --accept-package-agreements --accept-source-agreements
+        Write-Host "`n==========================================" -ForegroundColor DarkGray;
+        Write-Host "Instalando: $($Item.Content)..." -ForegroundColor Cyan;
+        winget install --id $Item.Tag -e --accept-package-agreements --accept-source-agreements;
     }
     
-    Write-Host "`n==========================================" -ForegroundColor DarkGray
-    Write-Host "¡Proceso completado con exito!" -ForegroundColor Green
-})
+    Write-Host "`n==========================================" -ForegroundColor DarkGray;
+    Write-Host "¡Proceso completado con exito!" -ForegroundColor Green;
+});
 
 # Mostrar la ventana
-$Ventana.ShowDialog() | Out-Null
+$Ventana.ShowDialog() | Out-Null;
