@@ -1,6 +1,6 @@
 Add-Type -AssemblyName PresentationFramework;
 
-# 1. CATALOGO COMPLETO DE PROGRAMAS CON ICONOS OFICIALES Y DESCRIPCION CLARA
+# 1. CATALOGO COMPLETO DE PROGRAMAS CON ANCHO AMPLIADO
 $Categorias = [ordered]@{
     "Navegadores" = @(
         @{ Name = "Brave Browser"; Id = "Brave.Brave"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=brave.com&sz=64" },
@@ -23,13 +23,13 @@ $Categorias = [ordered]@{
         @{ Name = "Adobe Acrobat Reader"; Id = "Adobe.Acrobat.Reader.64-bit"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" }
     );
     "Suite ArtCraft (Clon de Adobe Suite)" = @(
-        @{ Name = "ArtCraft Launcher (Alternativa Adobe)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
+        @{ Name = "ArtCraft Launcher (Alternativa a Adobe Suite)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
     );
     "Seguridad y Antivirus" = @(
         @{ Name = "ESET Security / NOD32"; Id = "ESET.Security"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" }
     );
     "Activadores y Licenciamiento" = @(
-        @{ Name = "Microsoft Activation Scripts (MAS)"; Id = "https://get.activated.win"; Type = "Script"; Icon = "https://www.google.com/s2/favicons?domain=massgrave.dev&sz=64" }
+        @{ Name = "Microsoft Activation Scripts (MAS) - Alternativo"; Id = "https://get.activated.win"; Type = "Script"; Icon = "https://www.google.com/s2/favicons?domain=massgrave.dev&sz=64" }
     );
     "Microsoft Office (Espanol)" = @(
         @{ Name = "Office 365"; Id = "OFFICE_365"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
@@ -76,10 +76,10 @@ function Instalar-Office ($Tipo) {
     }
 }
 
-# 3. DISEÑO VISUAL DE LA VENTANA (XAML ESTILO CTT CON SIDEBAR Y TARJETAS)
+# 3. DISEÑO VISUAL DE LA VENTANA (XAML ESTILO CTT CON SIDEBAR Y TARJETAS AMPLIAS)
 [xml]$XAML = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        Title="Panel de Instalacion - RaYFoX18" Height="780" Width="960"
+        Title="Panel de Instalacion - RaYFoX18" Height="780" Width="1000"
         WindowStartupLocation="CenterScreen" Background="#18181B" Foreground="White">
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
@@ -112,7 +112,7 @@ function Instalar-Office ($Tipo) {
             </StackPanel>
         </Border>
 
-        <!-- Área Principal de Categorías y Tarjetas con Iconos -->
+        <!-- Área Principal de Categorías y Tarjetas con Ancho Ampliado -->
         <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto">
             <StackPanel Name="PanelCategorias" Margin="0,0,5,0"/>
         </ScrollViewer>
@@ -136,7 +136,7 @@ function Actualizar-Contador {
     $TxtContador.Text = "Seleccionados: $Total";
 }
 
-# 4. GENERAR CATEGORIAS Y TARJETAS CON ICONOS EN GRID
+# 4. GENERAR CATEGORIAS Y TARJETAS AMPLIADAS EN GRID
 foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.GroupBox;
     $Grupo.Header = " $Cat ";
     $Grupo.Foreground = "#38BDF8";
@@ -146,10 +146,10 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
 
     $Contenedor = New-Object System.Windows.Controls.WrapPanel;
     
-    foreach ($App in $Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
+    foreach ($App in$Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
         $CB.Tag =$App.Id;
         $CB.ToolTip =$App.Type;
-        $CB.Width = 220;
+        $CB.Width = 320; # Ancho ampliado para evitar cortes en textos largos
         $CB.Height = 36;
         $CB.Margin = "6";
         $CB.Foreground = "#F4F4F5";
@@ -212,10 +212,10 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in $Seleccionados) {
+    foreach ($Item in$Seleccionados) {
         # Extraer el nombre de la aplicación de forma limpia
         $NombreApp = "";
-        foreach ($child in $Item.Content.Children) {
+        foreach ($child in$Item.Content.Children) {
             if ($child -is [System.Windows.Controls.TextBlock]) {
                 $NombreApp =$child.Text;
             }
