@@ -170,7 +170,7 @@ $BtnSeleccionarTodo.Add_Click({
 });
 
 $BtnLimpiar.Add_Click({
-    foreach ($cb in$ListaCheckboxes) { 
+    foreach ($cb in $ListaCheckboxes) { 
         $cb.IsChecked =$false; 
     }
     Actualizar-Contador;
