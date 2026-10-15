@@ -35,7 +35,7 @@ $Categorias = [ordered]@{
 # 2. FUNCION PARA INSTALAR OFFICE EN ESPAÑOL
 function Instalar-Office ($Tipo) {
     $RutaTemp = "$env:TEMP\office_setup";
-    if (!(Test-Path $RutaTemp)) { New-Item -ItemType Directory -Path$RutaTemp | Out-Null; }
+    if (!(Test-Path $RutaTemp)) { New-Item -ItemType Directory -Path $RutaTemp >$null; }
 
     if ($Tipo -eq "OFFICE_2024") {
         $Canal = "PerpetualVL2024";
@@ -62,9 +62,9 @@ function Instalar-Office ($Tipo) {
     [System.IO.File]::WriteAllText($ArchivoXML,$XML);
 
     Write-Host "Preparando instalador oficial de Microsoft ($Producto)..." -ForegroundColor Yellow;
-    winget install --id Microsoft.OfficeDeploymentTool -e --accept-package-agreements --accept-source-agreements --location $RutaTemp | Out-Null;
+    winget install --id Microsoft.OfficeDeploymentTool -e --accept-package-agreements --accept-source-agreements --location $RutaTemp >$null;
 
-    $SetupExe = Get-ChildItem -Path$RutaTemp -Filter "setup.exe" -Recurse | Select-Object -First 1;
+    $SetupExe = (Get-ChildItem -Path$RutaTemp -Filter "setup.exe" -Recurse)[0];
     if ($SetupExe) {
         Start-Process -FilePath $SetupExe.FullName -ArgumentList "/configure `"$ArchivoXML`"" -Wait;
     }
@@ -126,7 +126,7 @@ $ListaCheckboxes = @();
 
 # Función para actualizar el contador en tiempo real
 function Actualizar-Contador {
-    $Total = ($ListaCheckboxes | Where-Object { $_.IsChecked -eq$true }).Count;
+    $Total = ($ListaCheckboxes.Where({ $_.IsChecked -eq$true })).Count;
     $TxtContador.Text = "Seleccionados: $Total";
 }
 
@@ -140,7 +140,7 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
 
     $Contenedor = New-Object System.Windows.Controls.WrapPanel;
     
-    foreach ($App in $Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
+    foreach ($App in$Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
         $CB.Tag =$App.Id;
         $CB.ToolTip =$App.Type;
         $CB.Width = 210;
@@ -165,7 +165,7 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
                 $Bitmap.EndInit();
                 $Img.Source =$Bitmap;
             } catch {}
-            $StackCard.Children.Add($Img) | Out-Null;
+            $StackCard.Children.Add($Img) >$null;
         }
 
         # Texto del Programa
@@ -173,18 +173,17 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
         $Txt.Text =$App.Name;
         $Txt.VerticalAlignment = "Center";
         $Txt.FontSize = 13;
-        $StackCard.Children.Add($Txt) | Out-Null;
+        $StackCard.Children.Add($Txt) >$null;
 
         $CB.Content =$StackCard;
         
-        $CB.Add_Checked({ Actualizar-Contador });$CB.Add_Unchecked({ Actualizar-Contador });
-        
-        $Contenedor.Children.Add($CB) | Out-Null;
+        $CB.Add_Checked({ Actualizar-Contador });
+        $CB.Add_Unchecked({ Actualizar-Contador });$Contenedor.Children.Add($CB) >$null;
         $ListaCheckboxes +=$CB;
     }
 
     $Grupo.Content =$Contenedor;
-    $PanelCategorias.Children.Add($Grupo) | Out-Null;
+    $PanelCategorias.Children.Add($Grupo) >$null;
 }
 
 # Acciones de los botones del Sidebar
@@ -198,7 +197,7 @@ $BtnLimpiar.Add_Click({$ListaCheckboxes.ForEach({ $_.IsChecked =$false });
 
 # 5. ACCION DEL BOTON INSTALAR
 $BtnInstalar.Add_Click({
-    $Seleccionados =$ListaCheckboxes | Where-Object { $_.IsChecked -eq$true };
+    $Seleccionados =$ListaCheckboxes.Where({ $_.IsChecked -eq$true });
     
     if ($Seleccionados.Count -eq 0) {
         [System.Windows.MessageBox]::Show("Marca al menos un programa para instalar.", "Aviso");
@@ -207,9 +206,14 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in $Seleccionados) {
-        # Extraer el nombre de la aplicación desde el TextBlock interno
-        $NombreApp = (($Item.Content.Children \vert{} Where-Object {$_ -is [System.Windows.Controls.TextBlock] }).Text);
+    foreach ($Item in$Seleccionados) {
+        # Extraer el nombre de la aplicación de forma limpia sin usar tuberías
+        $NombreApp = "";
+        foreach ($child in$Item.Content.Children) {
+            if ($child -is [System.Windows.Controls.TextBlock]) {
+                $NombreApp =$child.Text;
+            }
+        }
         
         Write-Host "`n==========================================" -ForegroundColor DarkGray;
         Write-Host "Instalando: $NombreApp..." -ForegroundColor Cyan;
@@ -234,4 +238,4 @@ $BtnInstalar.Add_Click({
 });
 
 # Mostrar la ventana
-$Ventana.ShowDialog() | Out-Null;
+$Ventana.ShowDialog() >$null;
