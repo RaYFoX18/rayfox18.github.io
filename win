@@ -17,15 +17,62 @@ $Categorias = [ordered]@{
     "Comunicacion y Utilidades" = @(
         @{ Name = "Telegram Desktop"; Id = "Telegram.TelegramDesktop" },
         @{ Name = "VLC Media Player"; Id = "VideoLAN.VLC" },
-        @{ Name = "WinRAR"; Id = "RARLab.WinRAR" },
-        @{ Name = "Microsoft Office"; Id = "Microsoft.Office" }
+        @{ Name = "WinRAR"; Id = "RARLab.WinRAR" }
+    );
+    "Microsoft Office (Español)" = @(
+        @{ Name = "Office 365"; Id = "OFFICE_365" },
+        @{ Name = "Office 2024 ProPlus"; Id = "OFFICE_2024" },
+        @{ Name = "Office 2021 ProPlus"; Id = "OFFICE_2021" }
     )
 };
 
-# 2. DISEÑO VISUAL DE LA VENTANA (XAML)
+# 2. FUNCION PARA INSTALAR OFFICE EN ESPAÑOL (2021, 2024 o 365)
+function Instalar-Office ($Tipo) {
+    $RutaTemp = "$env:TEMP\office_setup";
+    if (!(Test-Path $RutaTemp)) { New-Item -ItemType Directory -Path$RutaTemp | Out-Null; }
+
+    if ($Tipo -eq "OFFICE_2024") {
+        $Canal = "PerpetualVL2024";
+        $Producto = "ProPlus2024Volume";
+    } elseif ($Tipo -eq "OFFICE_2021") {
+        $Canal = "PerpetualVL2021";
+        $Producto = "ProPlus2021Volume";
+    } else {
+        $Canal = "Current";
+        $Producto = "O365ProPlusRetail";
+    }
+
+    # Crear configuracion XML en español (64 bits)
+    $XML = @"
+<Configuration>
+  <Add OfficeClientEdition="64" Channel="$Canal">
+    <Product ID="$Producto">
+      <Language ID="es-es" />
+    </Product>
+  </Add>
+  <Display Level="Full" AcceptEULA="TRUE" />
+</Configuration>
+"@;
+    $ArchivoXML = "$RutaTemp\config.xml";
+    $XML \vert{} Out-File -FilePath$ArchivoXML -Encoding UTF8;
+
+    Write-Host "Preparando instalador oficial de Microsoft ($Producto en Español)..." -ForegroundColor Yellow;
+    winget install --id Microsoft.OfficeDeploymentTool -e --accept-package-agreements --accept-source-agreements --location $RutaTemp | Out-Null;
+
+    $SetupExe = Get-ChildItem -Path$RutaTemp -Filter "setup.exe" -Recurse | Select-Object -First 1;
+    if ($SetupExe) {
+        Write-Host "Iniciando descarga e instalacion de Office..." -ForegroundColor Green;
+        Start-Process -FilePath $SetupExe.FullName -ArgumentList "/configure `"$ArchivoXML`"" -Wait;
+    } else {
+        # Respaldo directo con WinGet si no detecta el setup.exe en la ruta temporal
+        winget install --id Microsoft.Office -e --accept-package-agreements --accept-source-agreements --override "/configure `"$ArchivoXML`"";
+    }
+}
+
+# 3. DISEÑO VISUAL DE LA VENTANA (XAML)
 [xml]$XAML = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        Title="Panel de Instalacion - RaYFoX18" Height="520" Width="640"
+        Title="Panel de Instalacion - RaYFoX18" Height="560" Width="640"
         WindowStartupLocation="CenterScreen" Background="#18181B" Foreground="White">
     <Grid Margin="15">
         <Grid.RowDefinitions>
@@ -55,7 +102,7 @@ $BtnInstalar =$Ventana.FindName("BtnInstalar");
 
 $ListaCheckboxes = @();
 
-# 3. GENERAR CATEGORIAS Y CASILLAS AUTOMATICAMENTE
+# 4. GENERAR CATEGORIAS Y CASILLAS AUTOMATICAMENTE
 foreach ($Cat in ($Categorias.Keys)) {$Grupo = New-Object System.Windows.Controls.GroupBox;
     $Grupo.Header = " $Cat ";
     $Grupo.Foreground = "#38BDF8";
@@ -81,7 +128,7 @@ foreach ($Cat in ($Categorias.Keys)) {$Grupo = New-Object System.Windows.Control
     $PanelCategorias.Children.Add($Grupo) | Out-Null;
 }
 
-# 4. ACCION DEL BOTON INSTALAR
+# 5. ACCION DEL BOTON INSTALAR
 $BtnInstalar.Add_Click({
     $Seleccionados =$ListaCheckboxes | Where-Object { $_.IsChecked -eq$true };
     
@@ -95,7 +142,12 @@ $BtnInstalar.Add_Click({
     foreach ($Item in ($Seleccionados)) {
         Write-Host "`n==========================================" -ForegroundColor DarkGray;
         Write-Host "Instalando: $($Item.Content)..." -ForegroundColor Cyan;
-        winget install --id $Item.Tag -e --accept-package-agreements --accept-source-agreements;
+        
+        if ($Item.Tag -like "OFFICE_*") {
+            Instalar-Office -Tipo $Item.Tag;
+        } else {
+            winget install --id $Item.Tag -e --accept-package-agreements --accept-source-agreements;
+        }
     }
     
     Write-Host "`n==========================================" -ForegroundColor DarkGray;
