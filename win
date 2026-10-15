@@ -20,6 +20,7 @@ $Categorias = [ordered]@{
         @{ Name = "VLC Media Player"; Id = "VideoLAN.VLC" }
         @{ Name = "WinRAR"; Id = "RARLab.WinRAR" }
         @{ Name = "Microsoft Office"; Id = "Microsoft.Office" }
+        @{ Name = "7-Zip"; Id = "7zip.7zip" }
     )
 }
 
