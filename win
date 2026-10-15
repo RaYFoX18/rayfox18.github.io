@@ -1,32 +1,38 @@
 Add-Type -AssemblyName PresentationFramework;
 
-# 1. CATALOGO DE PROGRAMAS
+# 1. CATALOGO COMPLETO DE PROGRAMAS
 $Categorias = [ordered]@{
     "Navegadores" = @(
-        @{ Name = "Brave Browser"; Id = "Brave.Brave" },
-        @{ Name = "Google Chrome"; Id = "Google.Chrome" },
-        @{ Name = "Mozilla Firefox"; Id = "Mozilla.Firefox" }
+        @{ Name = "Brave Browser"; Id = "Brave.Brave"; Type = "Winget" },
+        @{ Name = "Google Chrome"; Id = "Google.Chrome"; Type = "Winget" },
+        @{ Name = "Mozilla Firefox"; Id = "Mozilla.Firefox"; Type = "Winget" }
     );
     "Desarrollo y Redes" = @(
-        @{ Name = "VS Code"; Id = "Microsoft.VisualStudioCode" },
-        @{ Name = "Git"; Id = "Git.Git" },
-        @{ Name = "XAMPP (PHP 8.2)"; Id = "ApacheFriends.Xampp.8.2" },
-        @{ Name = "WinBox (MikroTik)"; Id = "MikroTik.Winbox" },
-        @{ Name = "AnyDesk"; Id = "AnyDeskSoftwareGmbH.AnyDesk" }
+        @{ Name = "VS Code"; Id = "Microsoft.VisualStudioCode"; Type = "Winget" },
+        @{ Name = "Git"; Id = "Git.Git"; Type = "Winget" },
+        @{ Name = "XAMPP (PHP 8.2)"; Id = "ApacheFriends.Xampp.8.2"; Type = "Winget" },
+        @{ Name = "WinBox (MikroTik)"; Id = "MikroTik.Winbox"; Type = "Winget" },
+        @{ Name = "AnyDesk"; Id = "AnyDeskSoftwareGmbH.AnyDesk"; Type = "Winget" },
+        @{ Name = "Supremo Control Remoto"; Id = "https://assets.nanosystems.com/public/download/Supremo.exe"; Type = "Url" }
     );
     "Comunicacion y Utilidades" = @(
-        @{ Name = "Telegram Desktop"; Id = "Telegram.TelegramDesktop" },
-        @{ Name = "VLC Media Player"; Id = "VideoLAN.VLC" },
-        @{ Name = "WinRAR"; Id = "RARLab.WinRAR" }
+        @{ Name = "Telegram Desktop"; Id = "Telegram.TelegramDesktop"; Type = "Winget" },
+        @{ Name = "VLC Media Player"; Id = "VideoLAN.VLC"; Type = "Winget" },
+        @{ Name = "WinRAR"; Id = "RARLab.WinRAR"; Type = "Winget" },
+        @{ Name = "WinZip"; Id = "Corel.WinZip"; Type = "Winget" },
+        @{ Name = "Adobe Acrobat Reader"; Id = "Adobe.Acrobat.Reader.64-bit"; Type = "Winget" }
     );
-    "Microsoft Office (Español)" = @(
-        @{ Name = "Office 365"; Id = "OFFICE_365" },
-        @{ Name = "Office 2024 ProPlus"; Id = "OFFICE_2024" },
-        @{ Name = "Office 2021 ProPlus"; Id = "OFFICE_2021" }
+    "Suite ArtCraft (Creatividad y Oficina)" = @(
+        @{ Name = "ArtCraft Launcher (Todas las Apps)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft" }
+    );
+    "Microsoft Office (Espanol)" = @(
+        @{ Name = "Office 365"; Id = "OFFICE_365"; Type = "Office" },
+        @{ Name = "Office 2024 ProPlus"; Id = "OFFICE_2024"; Type = "Office" },
+        @{ Name = "Office 2021 ProPlus"; Id = "OFFICE_2021"; Type = "Office" }
     )
 };
 
-# 2. FUNCION PARA INSTALAR OFFICE EN ESPAÑOL (2021, 2024 o 365)
+# 2. FUNCION PARA INSTALAR OFFICE EN ESPAÑOL
 function Instalar-Office ($Tipo) {
     $RutaTemp = "$env:TEMP\office_setup";
     if (!(Test-Path $RutaTemp)) { New-Item -ItemType Directory -Path$RutaTemp | Out-Null; }
@@ -42,7 +48,6 @@ function Instalar-Office ($Tipo) {
         $Producto = "O365ProPlusRetail";
     }
 
-    # Crear configuracion XML en español (64 bits)
     $XML = @"
 <Configuration>
   <Add OfficeClientEdition="64" Channel="$Canal">
@@ -56,41 +61,55 @@ function Instalar-Office ($Tipo) {
     $ArchivoXML = "$RutaTemp\config.xml";
     $XML \vert{} Out-File -FilePath$ArchivoXML -Encoding UTF8;
 
-    Write-Host "Preparando instalador oficial de Microsoft ($Producto en Español)..." -ForegroundColor Yellow;
+    Write-Host "Preparando instalador oficial de Microsoft ($Producto)..." -ForegroundColor Yellow;
     winget install --id Microsoft.OfficeDeploymentTool -e --accept-package-agreements --accept-source-agreements --location $RutaTemp | Out-Null;
 
     $SetupExe = Get-ChildItem -Path$RutaTemp -Filter "setup.exe" -Recurse | Select-Object -First 1;
     if ($SetupExe) {
-        Write-Host "Iniciando descarga e instalacion de Office..." -ForegroundColor Green;
         Start-Process -FilePath $SetupExe.FullName -ArgumentList "/configure `"$ArchivoXML`"" -Wait;
-    } else {
-        # Respaldo directo con WinGet si no detecta el setup.exe en la ruta temporal
-        winget install --id Microsoft.Office -e --accept-package-agreements --accept-source-agreements --override "/configure `"$ArchivoXML`"";
     }
 }
 
-# 3. DISEÑO VISUAL DE LA VENTANA (XAML)
+# 3. DISEÑO VISUAL DE LA VENTANA (XAML ESTILO CTT CON SIDEBAR Y TARJETAS)
 [xml]$XAML = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        Title="Panel de Instalacion - RaYFoX18" Height="560" Width="640"
+        Title="Panel de Instalacion - RaYFoX18" Height="720" Width="920"
         WindowStartupLocation="CenterScreen" Background="#18181B" Foreground="White">
     <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Instalador de Herramientas - RaYFoX18" 
-                   FontSize="20" FontWeight="Bold" Foreground="#38BDF8" Margin="0,0,0,15"/>
+        <!-- Cabecera Superior -->
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Instalador de Herramientas - RaYFoX18" 
+                   FontSize="22" FontWeight="Bold" Foreground="#38BDF8" Margin="0,0,0,15"/>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Name="PanelCategorias" Margin="0,0,10,0"/>
+        <!-- Barra Lateral de Acciones (Estilo CTT Sidebar) -->
+        <Border Grid.Row="1" Grid.Column="0" Background="#202024" CornerRadius="8" Padding="12" Margin="0,0,12,0">
+            <StackPanel>
+                <TextBlock Text="Acciones" FontWeight="Bold" Foreground="#38BDF8" FontSize="14" Margin="0,0,0,10"/>
+                
+                <Button Name="BtnSeleccionarTodo" Content="Seleccionar Todo" Height="32" Margin="0,0,0,8" Background="#27272A" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                <Button Name="BtnLimpiar" Content="Limpiar Seleccion" Height="32" Margin="0,0,0,15" Background="#27272A" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                
+                <Separator Background="#3F3F46" Margin="0,0,0,15"/>
+                
+                <TextBlock Name="TxtContador" Text="Seleccionados: 0" FontSize="13" Foreground="#A1A1AA" Margin="0,0,0,15"/>
+                
+                <Button Name="BtnInstalar" Content="Instalar Ahora" Height="45" Background="#0284C7" Foreground="White" FontSize="14" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Área Principal de Categorías y Tarjetas -->
+        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Name="PanelCategorias" Margin="0,0,5,0"/>
         </ScrollViewer>
-
-        <Button Name="BtnInstalar" Grid.Row="2" Content="Instalar Programas Seleccionados" 
-                Height="42" Margin="0,15,0,0" Background="#0284C7" Foreground="White" 
-                FontSize="15" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
     </Grid>
 </Window>
 "@;
@@ -99,10 +118,19 @@ $Reader = New-Object System.Xml.XmlNodeReader $XAML;
 $Ventana = [Windows.Markup.XamlReader]::Load($Reader);
 $PanelCategorias =$Ventana.FindName("PanelCategorias");
 $BtnInstalar =$Ventana.FindName("BtnInstalar");
+$BtnSeleccionarTodo =$Ventana.FindName("BtnSeleccionarTodo");
+$BtnLimpiar =$Ventana.FindName("BtnLimpiar");
+$TxtContador =$Ventana.FindName("TxtContador");
 
 $ListaCheckboxes = @();
 
-# 4. GENERAR CATEGORIAS Y CASILLAS AUTOMATICAMENTE
+# Función para actualizar el contador en tiempo real
+function Actualizar-Contador {
+    $Total = ($ListaCheckboxes | Where-Object { $_.IsChecked -eq$true }).Count;
+    $TxtContador.Text = "Seleccionados: $Total";
+}
+
+# 4. GENERAR CATEGORIAS Y TARJETAS EN GRID
 foreach ($Cat in ($Categorias.Keys)) {$Grupo = New-Object System.Windows.Controls.GroupBox;
     $Grupo.Header = " $Cat ";
     $Grupo.Foreground = "#38BDF8";
@@ -115,10 +143,15 @@ foreach ($Cat in ($Categorias.Keys)) {$Grupo = New-Object System.Windows.Control
     foreach ($App in ($Categorias[$Cat])) {$CB = New-Object System.Windows.Controls.CheckBox;
         $CB.Content =$App.Name;
         $CB.Tag =$App.Id;
+        $CB.ToolTip =$App.Type;
         $CB.Foreground = "#F4F4F5";
-        $CB.Width = 180;
+        $CB.Width = 205;
+        $CB.Height = 32;
         $CB.Margin = "6";
         $CB.FontSize = 13;
+        
+        # Evento para actualizar el contador al marcar/desmarcar
+        $CB.Add_Checked({ Actualizar-Contador });$CB.Add_Unchecked({ Actualizar-Contador });
         
         $Contenedor.Children.Add($CB) | Out-Null;
         $ListaCheckboxes +=$CB;
@@ -127,6 +160,17 @@ foreach ($Cat in ($Categorias.Keys)) {$Grupo = New-Object System.Windows.Control
     $Grupo.Content =$Contenedor;
     $PanelCategorias.Children.Add($Grupo) | Out-Null;
 }
+
+# Acciones de los botones del Sidebar
+$BtnSeleccionarTodo.Add_Click({
+    foreach ($cb in$ListaCheckboxes) { $cb.IsChecked =$true; }
+    Actualizar-Contador;
+});
+
+$BtnLimpiar.Add_Click({
+    foreach ($cb in$ListaCheckboxes) { $cb.IsChecked =$false; }
+    Actualizar-Contador;
+});
 
 # 5. ACCION DEL BOTON INSTALAR
 $BtnInstalar.Add_Click({
@@ -143,8 +187,18 @@ $BtnInstalar.Add_Click({
         Write-Host "`n==========================================" -ForegroundColor DarkGray;
         Write-Host "Instalando: $($Item.Content)..." -ForegroundColor Cyan;
         
-        if ($Item.Tag -like "OFFICE_*") {
+        $TipoInstalacion = $Item.ToolTip;
+
+        if ($TipoInstalacion -eq "Office") {
             Instalar-Office -Tipo $Item.Tag;
+        } elseif ($TipoInstalacion -eq "Url") {
+            $NombreArchivo = [System.IO.Path]::GetFileName($Item.Tag);
+            $RutaDestino = "$env:TEMP\$NombreArchivo";
+            Invoke-WebRequest -Uri $Item.Tag -OutFile $RutaDestino;
+            Start-Process -FilePath $RutaDestino -Wait;
+        } elseif ($TipoInstalacion -eq "ArtCraft") {
+            Start-Process $Item.Tag;
+            Write-Host "Abriendo la página oficial de ArtCraft..." -ForegroundColor Green;
         } else {
             winget install --id $Item.Tag -e --accept-package-agreements --accept-source-agreements;
         }
