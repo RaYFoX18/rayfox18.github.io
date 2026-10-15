@@ -23,7 +23,7 @@ $Categorias = [ordered]@{
         @{ Name = "Adobe Acrobat Reader"; Id = "Adobe.Acrobat.Reader.64-bit"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" }
     );
     "Suite ArtCraft (Creatividad y Oficina)" = @(
-        @{ Name = "ArtCraft Launcher (Todas las Apps)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
+        @{ Name = "ArtCraft Launcher (Todas las Apps, Clon de la Suite de ADOBE)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
     );
     "Microsoft Office (Espanol)" = @(
         @{ Name = "Office 365"; Id = "OFFICE_365"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
