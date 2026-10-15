@@ -187,7 +187,7 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in$Seleccionados) {
+    foreach ($Item in $Seleccionados) {
         Write-Host "`n==========================================" -ForegroundColor DarkGray;
         Write-Host "Instalando: $($Item.Content)..." -ForegroundColor Cyan;
         
