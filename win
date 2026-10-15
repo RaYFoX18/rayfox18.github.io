@@ -1,3 +1,106 @@
-Write-Host "Iniciando las herramientas de RayFOX18..." -ForegroundColor Cyan
-Start-Process "calc.exe"
-Write-Host "¡Prueba completada con exito!" -ForegroundColor Green
+Write-Host "Iniciando las herramientas de RaYFoX18..."
+Add-Type -AssemblyName PresentationFramework
+
+# 1. CATALOGO DE PROGRAMAS (Aquí puedes agregar o quitar los que quieras)
+$Categorias = [ordered]@{
+    "Navegadores" = @(
+        @{ Name = "Brave Browser"; Id = "Brave.Brave" }
+        @{ Name = "Google Chrome"; Id = "Google.Chrome" }
+        @{ Name = "Mozilla Firefox"; Id = "Mozilla.Firefox" }
+    )
+    "Desarrollo y Redes" = @(
+        @{ Name = "VS Code"; Id = "Microsoft.VisualStudioCode" }
+        @{ Name = "Git"; Id = "Git.Git" }
+        @{ Name = "XAMPP (PHP 8.2)"; Id = "ApacheFriends.Xampp.8.2" }
+        @{ Name = "WinBox (MikroTik)"; Id = "MikroTik.Winbox" }
+        @{ Name = "AnyDesk"; Id = "AnyDeskSoftwareGmbH.AnyDesk" }
+    )
+    "Comunicacion y Utilidades" = @(
+        @{ Name = "Telegram Desktop"; Id = "Telegram.TelegramDesktop" }
+        @{ Name = "VLC Media Player"; Id = "VideoLAN.VLC" }
+        @{ Name = "WinRAR"; Id = "RARLab.WinRAR" }
+        @{ Name = "Microsoft Office"; Id = "Microsoft.Office" }
+    )
+}
+
+# 2. DISEÑO VISUAL DE LA VENTANA (XAML)
+[xml]$XAML = @"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        Title="Panel de Instalacion - RaYFoX18" Height="520" Width="640"
+        WindowStartupLocation="CenterScreen" Background="#18181B" Foreground="White">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Instalador de Herramientas - RaYFoX18" 
+                   FontSize="20" FontWeight="Bold" Foreground="#38BDF8" Margin="0,0,0,15"/>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Name="PanelCategorias" Margin="0,0,10,0"/>
+        </ScrollViewer>
+
+        <Button Name="BtnInstalar" Grid.Row="2" Content="Instalar Programas Seleccionados" 
+                Height="42" Margin="0,15,0,0" Background="#0284C7" Foreground="White" 
+                FontSize="15" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
+    </Grid>
+</Window>
+"@
+
+$Reader = New-Object System.Xml.XmlNodeReader $XAML
+$Ventana = [Windows.Markup.XamlReader]::Load($Reader)
+$PanelCategorias =$Ventana.FindName("PanelCategorias")
+$BtnInstalar =$Ventana.FindName("BtnInstalar")
+
+$ListaCheckboxes = @()
+
+# 3. GENERAR CATEGORIAS Y CASILLAS AUTOMATICAMENTE
+foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.GroupBox
+    $Grupo.Header = " $Cat "
+    $Grupo.Foreground = "#38BDF8"
+    $Grupo.BorderBrush = "#3F3F46"
+    $Grupo.Margin = "0,0,0,12"
+    $Grupo.Padding = "8"
+
+    $Contenedor = New-Object System.Windows.Controls.WrapPanel
+    
+    foreach ($App in$Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox
+        $CB.Content =$App.Name
+        $CB.Tag =$App.Id
+        $CB.Foreground = "#F4F4F5"
+        $CB.Width = 180$CB.Margin = "6"
+        $CB.FontSize = 13
+        
+        $Contenedor.Children.Add($CB) | Out-Null
+        $ListaCheckboxes +=$CB
+    }
+
+    $Grupo.Content =$Contenedor
+    $PanelCategorias.Children.Add($Grupo) | Out-Null
+}
+
+# 4. ACCION DEL BOTON INSTALAR
+$BtnInstalar.Add_Click({
+    $Seleccionados =$ListaCheckboxes | Where-Object { $_.IsChecked -eq$true }
+    
+    if ($Seleccionados.Count -eq 0) {
+        [System.Windows.MessageBox]::Show("Marca al menos un programa para instalar.", "Aviso")
+        return
+    }
+
+    $Ventana.Close()
+
+    foreach ($Item in$Seleccionados) {
+        Write-Host "`n==========================================" -ForegroundColor DarkGray
+        Write-Host "Instalando: $($Item.Content)..." -ForegroundColor Cyan
+        winget install --id $Item.Tag -e --accept-package-agreements --accept-source-agreements
+    }
+    
+    Write-Host "`n==========================================" -ForegroundColor DarkGray
+    Write-Host "¡Proceso completado con exito!" -ForegroundColor Green
+})
+
+# Mostrar la ventana
+$Ventana.ShowDialog() | Out-Null
