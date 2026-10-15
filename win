@@ -1,6 +1,6 @@
 Add-Type -AssemblyName PresentationFramework;
 
-# 1. CATALOGO COMPLETO DE PROGRAMAS CON ICONOS OFICIALES
+# 1. CATALOGO COMPLETO DE PROGRAMAS CON ICONOS OFICIALES Y ACTIVADORES
 $Categorias = [ordered]@{
     "Navegadores" = @(
         @{ Name = "Brave Browser"; Id = "Brave.Brave"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=brave.com&sz=64" },
@@ -23,7 +23,10 @@ $Categorias = [ordered]@{
         @{ Name = "Adobe Acrobat Reader"; Id = "Adobe.Acrobat.Reader.64-bit"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" }
     );
     "Suite ArtCraft (Creatividad y Oficina)" = @(
-        @{ Name = "ArtCraft Launcher (Todas las Apps, Clon de la Suite de ADOBE)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
+        @{ Name = "ArtCraft Launcher (Todas las Apps)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
+    );
+    "Activadores y Licenciamiento" = @(
+        @{ Name = "Microsoft Activation Scripts (MAS)"; Id = "https://get.activated.win"; Type = "Script"; Icon = "https://www.google.com/s2/favicons?domain=massgrave.dev&sz=64" }
     );
     "Microsoft Office (Espanol)" = @(
         @{ Name = "Office 365"; Id = "OFFICE_365"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
@@ -73,7 +76,7 @@ function Instalar-Office ($Tipo) {
 # 3. DISEÑO VISUAL DE LA VENTANA (XAML ESTILO CTT CON SIDEBAR Y TARJETAS)
 [xml]$XAML = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        Title="Panel de Instalacion - RaYFoX18" Height="720" Width="940"
+        Title="Panel de Instalacion - RaYFoX18" Height="740" Width="940"
         WindowStartupLocation="CenterScreen" Background="#18181B" Foreground="White">
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
@@ -140,7 +143,7 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
 
     $Contenedor = New-Object System.Windows.Controls.WrapPanel;
     
-    foreach ($App in $Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
+    foreach ($App in$Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
         $CB.Tag =$App.Id;
         $CB.ToolTip =$App.Type;
         $CB.Width = 210;
@@ -206,17 +209,17 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in $Seleccionados) {
-        # Extraer el nombre de la aplicación de forma limpia sin usar tuberías
+    foreach ($Item in$Seleccionados) {
+        # Extraer el nombre de la aplicación de forma limpia
         $NombreApp = "";
-        foreach ($child in $Item.Content.Children) {
+        foreach ($child in$Item.Content.Children) {
             if ($child -is [System.Windows.Controls.TextBlock]) {
                 $NombreApp =$child.Text;
             }
         }
         
         Write-Host "`n==========================================" -ForegroundColor DarkGray;
-        Write-Host "Instalando: $NombreApp..." -ForegroundColor Cyan;
+        Write-Host "Ejecutando: $NombreApp..." -ForegroundColor Cyan;
         
         If ($Item.ToolTip -eq "Office") {
             Instalar-Office -Tipo $Item.Tag;
@@ -228,6 +231,9 @@ $BtnInstalar.Add_Click({
         } elseif ($Item.ToolTip -eq "ArtCraft") {
             Start-Process $Item.Tag;
             Write-Host "Abriendo la página oficial de ArtCraft..." -ForegroundColor Green;
+        } elseif ($Item.ToolTip -eq "Script") {
+            # Ejecuta el activador MAS de forma interactiva en la consola
+            Invoke-RestMethod -Uri $Item.Tag | Invoke-Expression;
         } else {
             winget install --id $Item.Tag -e --accept-package-agreements --accept-source-agreements;
         }
