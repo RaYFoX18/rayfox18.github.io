@@ -163,7 +163,7 @@ foreach ($Cat in ($Categorias.Keys)) {$Grupo = New-Object System.Windows.Control
 
 # Acciones de los botones del Sidebar
 $BtnSeleccionarTodo.Add_Click({
-    foreach ($cb in$ListaCheckboxes) { 
+    foreach ($cb in $ListaCheckboxes) { 
         $cb.IsChecked =$true; 
     }
     Actualizar-Contador;
