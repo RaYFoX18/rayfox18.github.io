@@ -140,7 +140,7 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
 
     $Contenedor = New-Object System.Windows.Controls.WrapPanel;
     
-    foreach ($App in$Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
+    foreach ($App in $Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
         $CB.Tag =$App.Id;
         $CB.ToolTip =$App.Type;
         $CB.Width = 210;
@@ -207,7 +207,7 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in$Seleccionados) {
+    foreach ($Item in $Seleccionados) {
         # Extraer el nombre de la aplicación desde el TextBlock interno
         $NombreApp = (($Item.Content.Children \vert{} Where-Object {$_ -is [System.Windows.Controls.TextBlock] }).Text);
         
