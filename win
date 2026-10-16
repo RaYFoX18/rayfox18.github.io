@@ -45,7 +45,7 @@ $Categorias = [ordered]@{
 # 2. FUNCION PARA INSTALAR OFFICE EN ESPAÑOL
 function Instalar-Office ($Tipo) {
     $RutaTemp = "$env:TEMP\office_setup";
-    if (!(Test-Path $RutaTemp)) { New-Item -ItemType Directory -Path $RutaTemp >$null; }
+    if (!(Test-Path $RutaTemp)) { New-Item -ItemType Directory -Path $RutaTemp -Force >$null; }
 
     if ($Tipo -eq "OFFICE_2024") {
         $Canal = "PerpetualVL2024";
@@ -72,11 +72,21 @@ function Instalar-Office ($Tipo) {
     [System.IO.File]::WriteAllText($ArchivoXML,$XML);
 
     Write-Host "Preparando instalador oficial de Microsoft ($Producto)..." -ForegroundColor Yellow;
-    winget install --id Microsoft.OfficeDeploymentTool -e --accept-package-agreements --accept-source-agreements --location $RutaTemp >$null;
+    
+    # 1. Descargar la herramienta de despliegue (ODT) oficial
+    $ODTUrl = "https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EB18CB20C5C2/officedeploymenttool_18528-20120.exe";
+    $ODTExe = "$RutaTemp\odt_installer.exe";
+    Invoke-WebRequest -Uri $ODTUrl -OutFile$ODTExe;
 
-    $SetupExe = (Get-ChildItem -Path $RutaTemp -Filter "setup.exe" -Recurse)[0];
-    if ($SetupExe) {
-        Start-Process -FilePath $SetupExe.FullName -ArgumentList "/configure `"$ArchivoXML`"" -Wait;
+    # 2. Extraer setup.exe en la carpeta temporal de forma silenciosa
+    Start-Process -FilePath $ODTExe -ArgumentList "/extract:`"$RutaTemp`" /quiet" -Wait;
+
+    # 3. Ejecutar setup.exe ya extraído junto con el archivo XML
+    $SetupExe = "$RutaTemp\setup.exe";
+    if (Test-Path $SetupExe) {
+        Start-Process -FilePath $SetupExe -ArgumentList "/configure `"$ArchivoXML`"" -Wait;
+    } else {
+        Write-Host "Error crítico: No se pudo extraer el instalador de Office." -ForegroundColor Red;
     }
 }
 
