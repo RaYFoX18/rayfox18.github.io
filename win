@@ -288,6 +288,13 @@ $BtnInstalar.Add_Click({
             $RutaDestino = "$env:TEMP\$NombreArchivo";
             Invoke-WebRequest -Uri $Item.Tag -OutFile $RutaDestino;
             Start-Process -FilePath $RutaDestino -Wait;
+        } elseif ($Item.ToolTip -eq "DescargaEscritorio") {
+            $NombreArchivo = [System.IO.Path]::GetFileName($Item.Tag);
+            $RutaEscritorio = [Environment]::GetFolderPath("Desktop");
+            $ArchivoDestino = "$RutaEscritorio\$NombreArchivo";
+            Write-Host "Descargando $NombreArchivo al Escritorio..." -ForegroundColor Yellow;
+            Invoke-WebRequest -Uri $Item.Tag -OutFile $ArchivoDestino;
+            Write-Host "¡Guardado con éxito en el Escritorio!" -ForegroundColor Green;
         } elseif ($Item.ToolTip -eq "ArtCraft") {
             Start-Process $Item.Tag;
             Write-Host "Abriendo la página oficial de ArtCraft..." -ForegroundColor Green;
@@ -297,6 +304,10 @@ $BtnInstalar.Add_Click({
             winget install --id $Item.Tag -e --accept-package-agreements --accept-source-agreements;
         }
     }
+    
+    Write-Host "`n==========================================" -ForegroundColor DarkGray;
+    Write-Host "¡Proceso completado con exito!" -ForegroundColor Green;
+});
     
     Write-Host "`n==========================================" -ForegroundColor DarkGray;
     Write-Host "¡Proceso completado con exito!" -ForegroundColor Green;
