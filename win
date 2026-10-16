@@ -47,7 +47,7 @@ $Categorias = [ordered]@{
     );
     
     "Microsoft Office (Espanol)" = @(
-        @{ Name = "Office 365"; Id = "OFFICE_365"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
+        #@{ Name = "Office 365"; Id = "OFFICE_365"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
         @{ Name = "Office 2024 ProPlus"; Id = "OFFICE_2024"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
         @{ Name = "Office 2021 ProPlus"; Id = "OFFICE_2021"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" }
     );
