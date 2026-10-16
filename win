@@ -87,18 +87,21 @@ function Instalar-Office ($Tipo) {
 
     Write-Host "Preparando instalador oficial de Microsoft ($Producto)..." -ForegroundColor Yellow;
     
-    # 1. Usar Winget para descargar y extraer el ODT (siempre obtiene la versión más reciente)
-    winget install --id Microsoft.OfficeDeploymentTool -e --accept-package-agreements --accept-source-agreements --location $RutaTemp >$null;
+    # 1. Descargar ODT usando el enlace permanente oficial de Microsoft (Nunca da error 404)
+    $ODTUrl = "https://go.microsoft.com/fwlink/p/?LinkID=626065";
+    $ODTExe = "$RutaTemp\odt_installer.exe";
+    Invoke-WebRequest -Uri $ODTUrl -OutFile$ODTExe;
 
-    # 2. Buscar el setup.exe extraído
-    $SetupExe = (Get-ChildItem -Path$RutaTemp -Filter "setup.exe" -Recurse | Select-Object -First 1);
-    
+    # 2. Extraer silenciosamente el setup.exe en nuestra carpeta temporal
+    Start-Process -FilePath $ODTExe -ArgumentList "/extract:`"$RutaTemp`" /quiet" -Wait;
+
     # 3. Entrar a la carpeta exacta y ejecutar
-    if ($SetupExe) {
-        Set-Location -Path $SetupExe.DirectoryName;
-        Start-Process -FilePath ".\setup.exe" -ArgumentList "/configure `"$ArchivoXML`"" -Wait;
+    $SetupExe = "$RutaTemp\setup.exe";
+    if (Test-Path $SetupExe) {
+        Set-Location -Path $RutaTemp;
+        Start-Process -FilePath ".\setup.exe" -ArgumentList "/configure .\config.xml" -Wait;
     } else {
-        Write-Host "Error crítico: No se encontró el setup.exe de Office en la carpeta temporal." -ForegroundColor Red;
+        Write-Host "Error crítico: No se encontró el setup.exe de Office." -ForegroundColor Red;
     }
 }
 
