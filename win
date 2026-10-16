@@ -239,10 +239,10 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in$Seleccionados) {
+    foreach ($Item in $Seleccionados) {
         # Extraer el nombre de la aplicación de forma limpia
         $NombreApp = "";
-        foreach ($child in$Item.Content.Children) {
+        foreach ($child in $Item.Content.Children) {
             if ($child -is [System.Windows.Controls.TextBlock]) {
                 $NombreApp =$child.Text;
             }
