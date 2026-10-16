@@ -18,9 +18,12 @@ $Categorias = [ordered]@{
     "Comunicacion y Utilidades" = @(
         @{ Name = "Telegram Desktop"; Id = "Telegram.TelegramDesktop"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=telegram.org&sz=64" },
         @{ Name = "VLC Media Player"; Id = "VideoLAN.VLC"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=videolan.org&sz=64" },
+        @{ Name = "K-Lite Codec Pack Standard"; Id = "CodecGuide.K-LiteCodecPack.Standard"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=free-codecs.com&sz=64" },
         @{ Name = "WinRAR"; Id = "RARLab.WinRAR"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=rarlab.com&sz=64" },
         @{ Name = "WinZip"; Id = "Corel.WinZip"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=winzip.com&sz=64" },
-        @{ Name = "Adobe Acrobat Reader"; Id = "Adobe.Acrobat.Reader.64-bit"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" }
+        @{ Name = "Adobe Acrobat Reader"; Id = "Adobe.Acrobat.Reader.64-bit"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" },
+        @{ Name = "SumatraPDF 64-bit (Instalable)"; Id = "https://www.sumatrapdfreader.org/dl/rel/3.6.1/SumatraPDF-3.6.1-64-install.exe"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=sumatrapdfreader.org&sz=64" },
+        @{ Name = "SumatraPDF 64-bit (Portatil)"; Id = "https://www.sumatrapdfreader.org/dl/rel/3.6.1/SumatraPDF-3.6.1-64.zip"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=sumatrapdfreader.org&sz=64" }
     );
     "Suite ArtCraft (Clon de Adobe Suite)" = @(
         @{ Name = "ArtCraft Launcher (Alternativa a Adobe Suite,PDFCraft, PhotoCraft, PhotoCraft y mas)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
