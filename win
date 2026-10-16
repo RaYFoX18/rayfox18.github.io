@@ -27,7 +27,7 @@ $Categorias = [ordered]@{
         @{ Name = "XAMPP (PHP 8.2)"; Id = "ApacheFriends.Xampp.8.2"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=apachefriends.org&sz=64" },
         @{ Name = "WinBox (MikroTik)"; Id = "MikroTik.Winbox"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=mikrotik.com&sz=64" },
         @{ Name = "AnyDesk"; Id = "AnyDeskSoftwareGmbH.AnyDesk"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=anydesk.com&sz=64" },
-        @{ Name = "Supremo Control Remoto"; Id = "https://assets.nanosystems.com/public/download/Supremo.exe"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=nanosystems.it&sz=64" }
+        @{ Name = "Supremo Control Remoto"; Id = "https://assets.nanosystems.com/public/download/Supremo.exe"; Type = "DescargaEscritorio"; Icon = "https://www.google.com/s2/favicons?domain=nanosystems.it&sz=64" }
     );
     "Comunicacion y Utilidades" = @(
         @{ Name = "Telegram Desktop"; Id = "Telegram.TelegramDesktop"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=telegram.org&sz=64" },
@@ -230,7 +230,7 @@ $BtnLimpiar.Add_Click({$ListaCheckboxes.ForEach({ $_.IsChecked =$false });
 
 # 5. ACCION DEL BOTON INSTALAR
 $BtnInstalar.Add_Click({
-    $Seleccionados =$ListaCheckboxes.Where({ $_.IsChecked -eq$true });
+    $Seleccionados = $ListaCheckboxes.Where({ $_.IsChecked -eq $true });
     
     if ($Seleccionados.Count -eq 0) {
         [System.Windows.MessageBox]::Show("Marca al menos un programa para instalar.", "Aviso");
@@ -244,9 +244,39 @@ $BtnInstalar.Add_Click({
         $NombreApp = "";
         foreach ($child in $Item.Content.Children) {
             if ($child -is [System.Windows.Controls.TextBlock]) {
-                $NombreApp =$child.Text;
+                $NombreApp = $child.Text;
             }
         }
+        
+        # Extraer el ID y el Tipo desde la propiedad Tag
+        $IdApp = $Item.Tag.Id;
+        $TipoApp = $Item.Tag.Type;
+
+        # ==========================================
+        # CONDICIONALES DE INSTALACIÓN / DESCARGA
+        # ==========================================
+        if ($TipoApp -eq "Winget") {
+            Write-Host "Instalando $NombreApp con Winget..." -ForegroundColor Cyan;
+            winget install --id $IdApp -e --accept-package-agreements --accept-source-agreements;
+        } 
+        elseif ($TipoApp -eq "Office") {
+            Instalar-Office -Tipo $IdApp;
+        }
+        elseif ($TipoApp -eq "DescargaEscritorio") {
+            Write-Host "Descargando $NombreApp directo al Escritorio..." -ForegroundColor Yellow;
+            
+            $RutaEscritorio = [Environment]::GetFolderPath("Desktop");
+            
+            # Truco para extraer automáticamente "Supremo.exe" (o cualquier nombre) del final del enlace
+            $NombreArchivo = $IdApp.Split('/')[-1];
+            $ArchivoDestino = "$RutaEscritorio\$NombreArchivo";
+            
+            Invoke-WebRequest -Uri $IdApp -OutFile $ArchivoDestino;
+            
+            Write-Host "¡$NombreApp guardado con éxito en el Escritorio!" -ForegroundColor Green;
+        }
+    }
+})
         
         Write-Host "`n==========================================" -ForegroundColor DarkGray;
         Write-Host "Ejecutando: $NombreApp..." -ForegroundColor Cyan;
