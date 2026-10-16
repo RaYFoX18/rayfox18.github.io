@@ -74,7 +74,7 @@ function Instalar-Office ($Tipo) {
     Write-Host "Preparando instalador oficial de Microsoft ($Producto)..." -ForegroundColor Yellow;
     winget install --id Microsoft.OfficeDeploymentTool -e --accept-package-agreements --accept-source-agreements --location $RutaTemp >$null;
 
-    $SetupExe = (Get-ChildItem -Path$RutaTemp -Filter "setup.exe" -Recurse)[0];
+    $SetupExe = (Get-ChildItem -Path $RutaTemp -Filter "setup.exe" -Recurse)[0];
     if ($SetupExe) {
         Start-Process -FilePath $SetupExe.FullName -ArgumentList "/configure `"$ArchivoXML`"" -Wait;
     }
