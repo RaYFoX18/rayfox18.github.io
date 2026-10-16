@@ -309,9 +309,5 @@ $BtnInstalar.Add_Click({
     Write-Host "¡Proceso completado con exito!" -ForegroundColor Green;
 });
     
-    Write-Host "`n==========================================" -ForegroundColor DarkGray;
-    Write-Host "¡Proceso completado con exito!" -ForegroundColor Green;
-});
-
 # Mostrar la ventana
 $Ventana.ShowDialog() >$null;
