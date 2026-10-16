@@ -56,55 +56,50 @@ $Categorias = [ordered]@{
     );
 };
 
-# 2. FUNCION PARA INSTALAR OFFICE EN ESPAÑOL
+# 2. FUNCION PARA INSTALAR OFFICE DESDE IMAGEN OFFLINE (.IMG) (2021 y 2024)
 function Instalar-Office ($Tipo) {
-    $RutaTemp = "$env:TEMP\office_setup";
-    if (!(Test-Path $RutaTemp)) { New-Item -ItemType Directory -Path $RutaTemp -Force >$null; }
-
+    # 1. Definir enlace según la versión (Sin Office 365)
     if ($Tipo -eq "OFFICE_2024") {
-        $Canal = "PerpetualVL2024";
-        $Producto = "ProPlus2024Volume";
+        $VersionName = "Office 2024";
+        $ImgUrl = "https://officecdn.microsoft.com/db/492350f6-3a01-4f97-b9c0-c7c6ddf67d60/media/es-es/ProPlus2024Retail.img";
     } elseif ($Tipo -eq "OFFICE_2021") {
-        $Canal = "PerpetualVL2021";
-        $Producto = "ProPlus2021Volume";
+        $VersionName = "Office 2021";
+        $ImgUrl = "https://officecdn.microsoft.com/db/492350f6-3a01-4f97-b9c0-c7c6ddf67d60/media/es-es/ProPlus2021Retail.img";
     } else {
-        $Canal = "Current";
-        $Producto = "O365ProPlusRetail";
+        Write-Host "Opción inválida o versión no soportada." -ForegroundColor Red;
+        return;
     }
 
-    $XML = @"
-<Configuration>
-  <Add OfficeClientEdition="64" Channel="$Canal">
-    <Product ID="$Producto">
-      <Language ID="es-es" />
-    </Product>
-  </Add>
-  <Display Level="Full" AcceptEULA="TRUE" />
-</Configuration>
-"@;
-    # Cambiamos el nombre del XML para que el extractor de Microsoft no lo pise
-    $ArchivoXML = "$RutaTemp\mi_configuracion.xml";
-    [System.IO.File]::WriteAllText($ArchivoXML,$XML);
+    $ImgPath = "$env:TEMP\OfficeOffline.img";
 
-    Write-Host "Preparando instalador oficial de Microsoft ($Producto)..." -ForegroundColor Yellow;
+    Write-Host "Descargando instalador completo de $VersionName (Esto puede tardar dependiendo del internet)..." -ForegroundColor Yellow;
     
-    # 1. Descargar ODT
-    $ODTUrl = "https://go.microsoft.com/fwlink/p/?LinkID=626065";
-    $ODTExe = "$RutaTemp\odt_installer.exe";
-    Invoke-WebRequest -Uri $ODTUrl -OutFile$ODTExe;
+    # 2. Descargar el archivo .img desde el CDN oficial
+    Invoke-WebRequest -Uri $ImgUrl -OutFile $ImgPath;
 
-    # 2. Extraer silenciosamente
-    Start-Process -FilePath $ODTExe -ArgumentList "/extract:`"$RutaTemp`" /quiet" -Wait;
+    if (Test-Path $ImgPath) {
+        Write-Host "Montando disco virtual..." -ForegroundColor Yellow;
+        
+        # 3. Montar la imagen virtual y obtener la letra del disco asignada
+        $Montaje = Mount-DiskImage -ImagePath $ImgPath -PassThru;
+        $LetraDisco = ($Montaje | Get-Volume).DriveLetter;
+        $SetupExe = "${LetraDisco}:\Setup.exe";
 
-    # Pequeña pausa para asegurar que Windows termine de guardar los archivos extraídos en el disco
-    Start-Sleep -Seconds 2;
+        if (Test-Path $SetupExe) {
+            Write-Host "Instalando $VersionName..." -ForegroundColor Yellow;
+            # 4. Ejecutar el instalador
+            Start-Process -FilePath $SetupExe -Wait;
+        } else {
+            Write-Host "Error: No se encontró el Setup.exe en la imagen montada." -ForegroundColor Red;
+        }
 
-    # 3. Ejecutar forzando el directorio de trabajo
-    $SetupExe = "$RutaTemp\setup.exe";
-    if (Test-Path $SetupExe) {
-        Start-Process -FilePath $SetupExe -ArgumentList "/configure mi_configuracion.xml" -WorkingDirectory $RutaTemp -Wait;
+        # 5. Desmontar el disco virtual y limpiar el archivo pesado
+        Write-Host "Limpiando archivos temporales..." -ForegroundColor Yellow;
+        Dismount-DiskImage -ImagePath $ImgPath >$null;
+        Remove-Item -Path $ImgPath -Force;
+        
     } else {
-        Write-Host "Error crítico: No se encontró el setup.exe de Office." -ForegroundColor Red;
+        Write-Host "Error crítico: No se pudo descargar el archivo .img." -ForegroundColor Red;
     }
 }
 
