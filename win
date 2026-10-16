@@ -82,24 +82,27 @@ function Instalar-Office ($Tipo) {
   <Display Level="Full" AcceptEULA="TRUE" />
 </Configuration>
 "@;
-    $ArchivoXML = "$RutaTemp\config.xml";
+    # Cambiamos el nombre del XML para que el extractor de Microsoft no lo pise
+    $ArchivoXML = "$RutaTemp\mi_configuracion.xml";
     [System.IO.File]::WriteAllText($ArchivoXML,$XML);
 
     Write-Host "Preparando instalador oficial de Microsoft ($Producto)..." -ForegroundColor Yellow;
     
-    # 1. Descargar ODT usando el enlace permanente oficial de Microsoft (Nunca da error 404)
+    # 1. Descargar ODT
     $ODTUrl = "https://go.microsoft.com/fwlink/p/?LinkID=626065";
     $ODTExe = "$RutaTemp\odt_installer.exe";
     Invoke-WebRequest -Uri $ODTUrl -OutFile$ODTExe;
 
-    # 2. Extraer silenciosamente el setup.exe en nuestra carpeta temporal
+    # 2. Extraer silenciosamente
     Start-Process -FilePath $ODTExe -ArgumentList "/extract:`"$RutaTemp`" /quiet" -Wait;
 
-    # 3. Entrar a la carpeta exacta y ejecutar
+    # Pequeña pausa para asegurar que Windows termine de guardar los archivos extraídos en el disco
+    Start-Sleep -Seconds 2;
+
+    # 3. Ejecutar forzando el directorio de trabajo
     $SetupExe = "$RutaTemp\setup.exe";
     if (Test-Path $SetupExe) {
-        Set-Location -Path $RutaTemp;
-        Start-Process -FilePath ".\setup.exe" -ArgumentList "/configure .\config.xml" -Wait;
+        Start-Process -FilePath $SetupExe -ArgumentList "/configure mi_configuracion.xml" -WorkingDirectory $RutaTemp -Wait;
     } else {
         Write-Host "Error crítico: No se encontró el setup.exe de Office." -ForegroundColor Red;
     }
