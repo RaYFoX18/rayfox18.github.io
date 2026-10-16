@@ -84,7 +84,8 @@ function Instalar-Office ($Tipo) {
     # 3. Ejecutar setup.exe ya extraído junto con el archivo XML
     $SetupExe = "$RutaTemp\setup.exe";
     if (Test-Path $SetupExe) {
-        Start-Process -FilePath $SetupExe -ArgumentList "/configure `"$ArchivoXML`"" -Wait;
+        Set-Location -Path $RutaTemp;
+        Start-Process -FilePath ".\setup.exe" -ArgumentList "/configure .\config.xml" -Wait;
     } else {
         Write-Host "Error crítico: No se pudo extraer el instalador de Office." -ForegroundColor Red;
     }
