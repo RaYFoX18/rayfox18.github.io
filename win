@@ -76,7 +76,7 @@ function Instalar-Office ($Tipo) {
     # 1. Descargar la herramienta de despliegue (ODT) oficial
     $ODTUrl = "https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EB18CB20C5C2/officedeploymenttool_18528-20120.exe";
     $ODTExe = "$RutaTemp\odt_installer.exe";
-    Invoke-WebRequest -Uri $ODTUrl -OutFile$ODTExe;
+    Invoke-WebRequest -Uri $ODTUrl -OutFile $ODTExe;
 
     # 2. Extraer setup.exe en la carpeta temporal de forma silenciosa
     Start-Process -FilePath $ODTExe -ArgumentList "/extract:`"$RutaTemp`" /quiet" -Wait;
