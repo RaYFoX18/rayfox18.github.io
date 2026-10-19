@@ -4,14 +4,11 @@ Add-Type -AssemblyName PresentationFramework;
 # MODO DESARROLLADOR Y CONTROL DE ERRORES
 # ==========================================
 if ($env:USERNAME -eq "soporte.PESPECIAL0") {
-    # Si eres tú, PowerShell mostrará los errores normales en rojo
     $ErrorActionPreference = "Continue"
 } else {
-    # Si es cualquier otro usuario, oculta todos los errores silenciosamente
     $ErrorActionPreference = "SilentlyContinue"
 }
 
-# Limpia la consola para que el usuario vea un fondo negro limpio al abrir
 Clear-Host
 
 # 1. CATALOGO COMPLETO DE PROGRAMAS
@@ -39,6 +36,68 @@ $Categorias = [ordered]@{
         @{ Name = "PDFCraft"; Id = "https://drive.google.com/uc?export=download&id=1S_71ZVyF5mqp8iWA2gUOhe6WzonnJsyn"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" },
         @{ Name = "SumatraPDF 64-bit (Instalable)"; Id = "https://www.sumatrapdfreader.org/dl/rel/3.6.1/SumatraPDF-3.6.1-64-install.exe"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=sumatrapdfreader.org&sz=64" },
         @{ Name = "SumatraPDF 64-bit (Portatil)"; Id = "https://www.sumatrapdfreader.org/dl/rel/3.6.1/SumatraPDF-3.6.1-64.zip"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=sumatrapdfreader.org&sz=64" }
+    );
+    "Archivos y Documentos" = @(
+        @{ Name = "Foxit Reader"; Id = "Foxit.FoxitReader"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=foxit.com&sz=64" },
+        @{ Name = "LibreOffice"; Id = "TheDocumentFoundation.LibreOffice"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=libreoffice.org&sz=64" },
+        @{ Name = "CutePDF Writer"; Id = "AcroSoftware.CutePDFWriter"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=cutepdf.com&sz=64" },
+        @{ Name = "PDF24 Creator"; Id = "geeksoftware.PDF24Creator"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=pdf24.org&sz=64" },
+        @{ Name = "7-Zip"; Id = "7zip.7zip"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=7-zip.org&sz=64" },
+        @{ Name = "PeaZip"; Id = "Giorgiotani.PeaZip"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=peazip.it&sz=64" }
+    );
+    "Multimedia y Diseño" = @(
+        @{ Name = "AIMP"; Id = "AIMP.AIMP"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=aimp.ru&sz=64" },
+        @{ Name = "foobar2000"; Id = "foobar2000.foobar2000"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=foobar2000.org&sz=64" },
+        @{ Name = "Audacity"; Id = "Audacity.Audacity"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=audacityteam.org&sz=64" },
+        @{ Name = "HandBrake"; Id = "HandBrake.HandBrake"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=handbrake.fr&sz=64" },
+        @{ Name = "OBS Studio"; Id = "OBSProject.OBSStudio"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=obsproject.com&sz=64" },
+        @{ Name = "Krita"; Id = "Krita.Krita"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=krita.org&sz=64" },
+        @{ Name = "Blender"; Id = "BlenderFoundation.Blender"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=blender.org&sz=64" },
+        @{ Name = "Paint.NET"; Id = "dotPDN.PaintNet"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=getpaint.net&sz=64" },
+        @{ Name = "GIMP"; Id = "GIMP.GIMP"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=gimp.org&sz=64" },
+        @{ Name = "Inkscape"; Id = "Inkscape.Inkscape"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=inkscape.org&sz=64" },
+        @{ Name = "ShareX"; Id = "ShareX.ShareX"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=getsharex.com&sz=64" },
+        @{ Name = "Bambu Studio"; Id = "BambuLab.BambuStudio"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=bambulab.com&sz=64" },
+        @{ Name = "UltiMaker Cura"; Id = "UltiMaker.Cura"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=ultimaker.com&sz=64" }
+    );
+    "Herramientas de Sistema y Utilidades" = @(
+        @{ Name = "Microsoft PowerToys"; Id = "Microsoft.PowerToys"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
+        @{ Name = "TeamViewer"; Id = "TeamViewer.TeamViewer"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=teamviewer.com&sz=64" },
+        @{ Name = "ImgBurn"; Id = "LIGHTNINGUK.ImgBurn"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=imgburn.com&sz=64" },
+        @{ Name = "RustDesk"; Id = "RustDesk.RustDesk"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=rustdesk.com&sz=64" },
+        @{ Name = "Tailscale"; Id = "Tailscale.Tailscale"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=tailscale.com&sz=64" },
+        @{ Name = "WireGuard"; Id = "WireGuard.WireGuard"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=wireguard.com&sz=64" },
+        @{ Name = "TeraCopy"; Id = "CodeSector.TeraCopy"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=codesector.com&sz=64" },
+        @{ Name = "Revo Uninstaller"; Id = "RevoUninstaller.RevoUninstaller"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=revouninstaller.com&sz=64" },
+        @{ Name = "WinDirStat"; Id = "WinDirStat.WinDirStat"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=windirstat.net&sz=64" },
+        @{ Name = "WizTree"; Id = "AntibodySoftware.WizTree"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=antibodysoftware.com&sz=64" },
+        @{ Name = "Advanced IP Scanner"; Id = "Famatech.AdvancedIPScanner"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=advanced-ip-scanner.com&sz=64" },
+        @{ Name = "CCleaner"; Id = "Piriform.CCleaner"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=ccleaner.com&sz=64" }
+    );
+    "Herramientas de Desarrollo" = @(
+        @{ Name = "Python 3.11"; Id = "Python.Python.3.11"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=python.org&sz=64" },
+        @{ Name = "GitHub Desktop"; Id = "GitHub.GitHubDesktop"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=github.com&sz=64" },
+        @{ Name = "Docker Desktop"; Id = "Docker.DockerDesktop"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=docker.com&sz=64" },
+        @{ Name = "Node.js"; Id = "OpenJS.NodeJS"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=nodejs.org&sz=64" },
+        @{ Name = "FileZilla Client"; Id = "TimKosse.FileZillaClient"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=filezilla-project.org&sz=64" },
+        @{ Name = "Notepad++"; Id = "Notepad++.Notepad++"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=notepad-plus-plus.org&sz=64" },
+        @{ Name = "Sublime Text 4"; Id = "SublimeHQ.SublimeText.4"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=sublimetext.com&sz=64" },
+        @{ Name = "WinSCP"; Id = "WinSCP.WinSCP"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=winscp.net&sz=64" },
+        @{ Name = "PuTTY"; Id = "PuTTY.PuTTY"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=putty.org&sz=64" },
+        @{ Name = "Eclipse IDE"; Id = "EclipseFoundation.Eclipse"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=eclipse.org&sz=64" },
+        @{ Name = "Cursor"; Id = "Anysphere.Cursor"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=cursor.com&sz=64" }
+    );
+    "Comunicacion y Almacenamiento en Nube" = @(
+        @{ Name = "Zoom"; Id = "Zoom.Zoom"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=zoom.us&sz=64" },
+        @{ Name = "Discord"; Id = "Discord.Discord"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=discord.com&sz=64" },
+        @{ Name = "Microsoft Teams"; Id = "Microsoft.Teams"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
+        @{ Name = "Slack"; Id = "SlackTechnologies.Slack"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=slack.com&sz=64" },
+        @{ Name = "WhatsApp"; Id = "WhatsApp.WhatsApp"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=whatsapp.com&sz=64" },
+        @{ Name = "Mozilla Thunderbird"; Id = "Mozilla.Thunderbird"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=thunderbird.net&sz=64" },
+        @{ Name = "qBittorrent"; Id = "qBittorrent.qBittorrent"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=qbittorrent.org&sz=64" },
+        @{ Name = "Dropbox"; Id = "Dropbox.Dropbox"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=dropbox.com&sz=64" },
+        @{ Name = "Google Drive"; Id = "Google.GoogleDrive"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=google.com&sz=64" },
+        @{ Name = "Microsoft OneDrive"; Id = "Microsoft.OneDrive"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" }
     );
     "Seguridad y Antivirus" = @(
         @{ Name = "ESET Security / NOD32 (Winget)"; Id = "ESET.Security"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" },
@@ -130,7 +189,7 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
 
     $Contenedor = New-Object System.Windows.Controls.WrapPanel;
     
-    foreach ($App in $Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
+    foreach ($App in$Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
         $CB.Tag =$App.Id;
         $CB.ToolTip =$App.Type;
         $CB.Width = 320; # Ancho ampliado
@@ -193,10 +252,8 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in $Seleccionados) {
-        # Extraer el nombre de la aplicación
-        $NombreApp = "";
-        foreach ($child in $Item.Content.Children) {
+    foreach ($Item in $Seleccionados) {$NombreApp = "";
+        foreach ($child in$Item.Content.Children) {
             if ($child -is [System.Windows.Controls.TextBlock]) {
                 $NombreApp =$child.Text;
             }
@@ -206,10 +263,8 @@ $BtnInstalar.Add_Click({
         Write-Host "Ejecutando: $NombreApp..." -ForegroundColor Cyan;
         
         if ($Item.ToolTip -eq "Url") {
-            # Convierte el enlace de Google Drive en descarga directa y genera un .exe temporal
             $UrlFinal = $Item.Tag;
             if ($UrlFinal -like "*drive.google.com*") {
-                # Extrae automáticamente el ID del archivo de Google Drive si viene en formato normal o /uc?
                 if ($UrlFinal -match "/d/([a-zA-Z0-9_-]+)") {
                     $FileId = $Matches[1];
                     $UrlFinal = "https://drive.google.com/uc?export=download&id=$FileId";
