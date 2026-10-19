@@ -1,4 +1,5 @@
 Add-Type -AssemblyName PresentationFramework;
+Add-Type -AssemblyName System.Windows.Forms;
 
 # ==========================================
 # MODO DESARROLLADOR Y CONTROL DE ERRORES
@@ -119,179 +120,35 @@ $Categorias = [ordered]@{
     );
 };
 
-# 2. DISEÑO VISUAL DE LA VENTANA (XAML)
+# 2. DISEÑO VISUAL DE LA VENTANA CON PESTAÑAS (XAML)
 [xml]$XAML = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        Title="Panel de Instalacion - RaYFoX18" Height="780" Width="1000"
+        Title="Panel de Instalacion y Booteo - RaYFoX18" Height="800" Width="1020"
         WindowStartupLocation="CenterScreen" Background="#18181B" Foreground="White">
     <Grid Margin="15">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="220"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Cabecera Superior -->
-        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Instalador de Herramientas - RaYFoX18" 
-                   FontSize="22" FontWeight="Bold" Foreground="#38BDF8" Margin="0,0,0,15"/>
+        <TextBlock Grid.Row="0" Text="Toolkit de Soporte Técnico - RaYFoX18" 
+                   FontSize="22" FontWeight="Bold" Foreground="#38BDF8" Margin="0,0,0,12"/>
 
-        <!-- Barra Lateral de Acciones -->
-        <Border Grid.Row="1" Grid.Column="0" Background="#202024" CornerRadius="8" Padding="12" Margin="0,0,12,0">
-            <StackPanel>
-                <TextBlock Text="Acciones" FontWeight="Bold" Foreground="#38BDF8" FontSize="14" Margin="0,0,0,10"/>
-                
-                <Button Name="BtnSeleccionarTodo" Content="Seleccionar Todo" Height="32" Margin="0,0,0,8" Background="#27272A" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                <Button Name="BtnLimpiar" Content="Limpiar Seleccion" Height="32" Margin="0,0,0,15" Background="#27272A" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                
-                <Separator Background="#3F3F46" Margin="0,0,0,15"/>
-                
-                <TextBlock Name="TxtContador" Text="Seleccionados: 0" FontSize="13" Foreground="#A1A1AA" Margin="0,0,0,15"/>
-                
-                <Button Name="BtnInstalar" Content="Instalar Ahora" Height="45" Background="#0284C7" Foreground="White" FontSize="14" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
-            </StackPanel>
-        </Border>
+        <!-- Control de Pestañas -->
+        <TabControl Grid.Row="1" Background="#18181B" BorderBrush="#3F3F46" Padding="8">
+            
+            <!-- PESTAÑA 1: INSTALADOR DE PROGRAMAS -->
+            <TabItem Header=" 📦 Catálogo de Programas " FontSize="14" FontWeight="Bold" Foreground="#38BDF8" Background="#27272A">
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-        <!-- Área Principal de Categorías y Tarjetas -->
-        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Name="PanelCategorias" Margin="0,0,5,0"/>
-        </ScrollViewer>
-    </Grid>
-</Window>
-"@;
-
-$Reader = New-Object System.Xml.XmlNodeReader $XAML;
-$Ventana = [Windows.Markup.XamlReader]::Load($Reader);
-$PanelCategorias =$Ventana.FindName("PanelCategorias");
-$BtnInstalar =$Ventana.FindName("BtnInstalar");
-$BtnSeleccionarTodo =$Ventana.FindName("BtnSeleccionarTodo");
-$BtnLimpiar =$Ventana.FindName("BtnLimpiar");
-$TxtContador =$Ventana.FindName("TxtContador");
-
-$ListaCheckboxes = @();
-
-# Función para actualizar el contador en tiempo real
-function Actualizar-Contador {
-    $Total = ($ListaCheckboxes.Where({ $_.IsChecked -eq$true })).Count;
-    $TxtContador.Text = "Seleccionados: $Total";
-}
-
-# 3. GENERAR CATEGORIAS Y TARJETAS EN LA INTERFAZ
-foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.GroupBox;
-    $Grupo.Header = " $Cat ";
-    $Grupo.Foreground = "#38BDF8";
-    $Grupo.BorderBrush = "#3F3F46";
-    $Grupo.Margin = "0,0,0,12";
-    $Grupo.Padding = "8";
-
-    $Contenedor = New-Object System.Windows.Controls.WrapPanel;
-    
-    foreach ($App in $Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
-        $CB.Tag =$App.Id;
-        $CB.ToolTip =$App.Type;
-        $CB.Width = 320; # Ancho ampliado
-        $CB.Height = 36;
-        $CB.Margin = "6";
-        $CB.Foreground = "#F4F4F5";
-        
-        $StackCard = New-Object System.Windows.Controls.StackPanel;
-        $StackCard.Orientation = "Horizontal";
-
-        if ($App.Icon) {$Img = New-Object System.Windows.Controls.Image;
-            $Img.Width = 18;
-            $Img.Height = 18;
-            $Img.Margin = "0,0,8,0";
-            try {
-                $Bitmap = New-Object System.Windows.Media.Imaging.BitmapImage;
-                $Bitmap.BeginInit();
-                $Bitmap.UriSource = [System.Uri]$App.Icon;
-                $Bitmap.CacheOption = [System.Windows.Media.Imaging.BitmapCacheOption]::OnLoad;
-                $Bitmap.EndInit();
-                $Img.Source =$Bitmap;
-            } catch {}
-            $StackCard.Children.Add($Img) >$null;
-        }
-
-        $Txt = New-Object System.Windows.Controls.TextBlock;
-        $Txt.Text =$App.Name;
-        $Txt.VerticalAlignment = "Center";
-        $Txt.FontSize = 12;
-        $StackCard.Children.Add($Txt) >$null;
-
-        $CB.Content =$StackCard;
-        
-        $CB.Add_Checked({ Actualizar-Contador });
-        $CB.Add_Unchecked({ Actualizar-Contador });$Contenedor.Children.Add($CB) >$null;
-        $ListaCheckboxes +=$CB;
-    }
-
-    $Grupo.Content =$Contenedor;
-    $PanelCategorias.Children.Add($Grupo) >$null;
-}
-
-# Acciones de los botones del Sidebar
-$BtnSeleccionarTodo.Add_Click({$ListaCheckboxes.ForEach({ $_.IsChecked =$true });
-    Actualizar-Contador;
-});
-
-$BtnLimpiar.Add_Click({$ListaCheckboxes.ForEach({ $_.IsChecked =$false });
-    Actualizar-Contador;
-});
-
-# 4. ACCION DEL BOTON INSTALAR
-$BtnInstalar.Add_Click({
-    $Seleccionados =$ListaCheckboxes.Where({ $_.IsChecked -eq$true });
-    
-    if ($Seleccionados.Count -eq 0) {
-        [System.Windows.MessageBox]::Show("Marca al menos un programa para instalar.", "Aviso");
-        return;
-    }
-
-    $Ventana.Close();
-
-    foreach ($Item in $Seleccionados) {$NombreApp = "";
-        foreach ($child in $Item.Content.Children) {
-            if ($child -is [System.Windows.Controls.TextBlock]) {
-                $NombreApp =$child.Text;
-            }
-        }
-        
-        Write-Host "`n==========================================" -ForegroundColor DarkGray;
-        Write-Host "Ejecutando: $NombreApp..." -ForegroundColor Cyan;
-        
-        if ($Item.ToolTip -eq "Url") {
-            $UrlFinal = $Item.Tag;
-            if ($UrlFinal -like "*drive.google.com*") {
-                if ($UrlFinal -match "/d/([a-zA-Z0-9_-]+)") {
-                    $FileId = $Matches[1];
-                    $UrlFinal = "https://drive.google.com/uc?export=download&id=$FileId";
-                }
-            }
-
-            $RutaDestino = "$env:TEMP\Instalador_$(Get-Random).exe";
-            Write-Host "Descargando instalador de $NombreApp..." -ForegroundColor Yellow;
-            Invoke-WebRequest -Uri $UrlFinal -OutFile $RutaDestino;
-            Start-Process -FilePath $RutaDestino -Wait;
-        } elseif ($Item.ToolTip -eq "DescargaEscritorio") {
-            $NombreArchivo = [System.IO.Path]::GetFileName($Item.Tag);
-            $RutaEscritorio = [Environment]::GetFolderPath("Desktop");
-            $ArchivoDestino = "$RutaEscritorio\$NombreArchivo";
-            Write-Host "Descargando $NombreArchivo al Escritorio..." -ForegroundColor Yellow;
-            Invoke-WebRequest -Uri $Item.Tag -OutFile $ArchivoDestino;
-            Write-Host "¡Guardado con éxito en el Escritorio!" -ForegroundColor Green;
-        } elseif ($Item.ToolTip -eq "Script") {
-            Invoke-RestMethod -Uri $Item.Tag | Invoke-Expression;
-        } else {
-            winget install --id $Item.Tag -e --accept-package-agreements --accept-source-agreements;
-        }
-    }
-    
-    Write-Host "`n==========================================" -ForegroundColor DarkGray;
-    Write-Host "¡Proceso completado con exito!" -ForegroundColor Green;
-});
-    
-# Mostrar la ventana
-$Ventana.ShowDialog() >$null;
+                    <!-- Barra Lateral de Acciones -->
+                    <Border Grid.Column="0" Background="#202024" CornerRadius="8" Padding="12" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Text="Acciones" FontWeight="Bold" Foreground="#38BDF8" FontSize="14" Margin="0,0,0,10"/>
+                            <Button Name="BtnSeleccionarTodo" Content="Seleccionar Todo" Height="32" Margin="0,0,0,8" Background="#27272A" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                            <Button Name="BtnLimpiar" Content="Limpiar Seleccion" Height="32" Margin="0,0,0,15" Background="#27272A" Foreground="White" BorderThickness="0" Cursor="
