@@ -36,11 +36,9 @@ $Categorias = [ordered]@{
         @{ Name = "WinRAR"; Id = "RARLab.WinRAR"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=rarlab.com&sz=64" },
         @{ Name = "WinZip"; Id = "Corel.WinZip"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=winzip.com&sz=64" },
         @{ Name = "Adobe Acrobat Reader"; Id = "Adobe.Acrobat.Reader.64-bit"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" },
+        @{ Name = "PDFCraft"; Id = "https://drive.google.com/uc?export=download&id=1S_71ZVyF5mqp8iWA2gUOhe6WzonnJsyn"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" },
         @{ Name = "SumatraPDF 64-bit (Instalable)"; Id = "https://www.sumatrapdfreader.org/dl/rel/3.6.1/SumatraPDF-3.6.1-64-install.exe"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=sumatrapdfreader.org&sz=64" },
         @{ Name = "SumatraPDF 64-bit (Portatil)"; Id = "https://www.sumatrapdfreader.org/dl/rel/3.6.1/SumatraPDF-3.6.1-64.zip"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=sumatrapdfreader.org&sz=64" }
-    );
-    "Suite ArtCraft (Clon de Adobe Suite)" = @(
-        @{ Name = "ArtCraft Launcher (Alternativa a Adobe Suite)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
     );
     "Seguridad y Antivirus" = @(
         @{ Name = "ESET Security / NOD32 (Winget)"; Id = "ESET.Security"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" },
@@ -132,7 +130,7 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
 
     $Contenedor = New-Object System.Windows.Controls.WrapPanel;
     
-    foreach ($App in $Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
+    foreach ($App in$Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
         $CB.Tag =$App.Id;
         $CB.ToolTip =$App.Type;
         $CB.Width = 320; # Ancho ampliado
@@ -195,10 +193,10 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in $Seleccionados) {
+    foreach ($Item in$Seleccionados) {
         # Extraer el nombre de la aplicación
         $NombreApp = "";
-        foreach ($child in $Item.Content.Children) {
+        foreach ($child in$Item.Content.Children) {
             if ($child -is [System.Windows.Controls.TextBlock]) {
                 $NombreApp =$child.Text;
             }
@@ -208,10 +206,19 @@ $BtnInstalar.Add_Click({
         Write-Host "Ejecutando: $NombreApp..." -ForegroundColor Cyan;
         
         if ($Item.ToolTip -eq "Url") {
-            # Genera un nombre con .exe para que Windows reconozca los enlaces largos de Office y ejecutables
+            # Convierte el enlace de Google Drive en descarga directa y genera un .exe temporal
+            $UrlFinal = $Item.Tag;
+            if ($UrlFinal -like "*drive.google.com*") {
+                # Extrae automáticamente el ID del archivo de Google Drive si viene en formato normal o /uc?
+                if ($UrlFinal -match "/d/([a-zA-Z0-9_-]+)") {
+                    $FileId = $Matches[1];
+                    $UrlFinal = "https://drive.google.com/uc?export=download&id=$FileId";
+                }
+            }
+
             $RutaDestino = "$env:TEMP\Instalador_$(Get-Random).exe";
             Write-Host "Descargando instalador de $NombreApp..." -ForegroundColor Yellow;
-            Invoke-WebRequest -Uri $Item.Tag -OutFile $RutaDestino;
+            Invoke-WebRequest -Uri $UrlFinal -OutFile $RutaDestino;
             Start-Process -FilePath $RutaDestino -Wait;
         } elseif ($Item.ToolTip -eq "DescargaEscritorio") {
             $NombreArchivo = [System.IO.Path]::GetFileName($Item.Tag);
@@ -220,9 +227,6 @@ $BtnInstalar.Add_Click({
             Write-Host "Descargando $NombreArchivo al Escritorio..." -ForegroundColor Yellow;
             Invoke-WebRequest -Uri $Item.Tag -OutFile $ArchivoDestino;
             Write-Host "¡Guardado con éxito en el Escritorio!" -ForegroundColor Green;
-        } elseif ($Item.ToolTip -eq "ArtCraft") {
-            Start-Process $Item.Tag;
-            Write-Host "Abriendo la página oficial de ArtCraft..." -ForegroundColor Green;
         } elseif ($Item.ToolTip -eq "Script") {
             Invoke-RestMethod -Uri $Item.Tag | Invoke-Expression;
         } else {
