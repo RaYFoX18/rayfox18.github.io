@@ -14,7 +14,7 @@ if ($env:USERNAME -eq "soporte.PESPECIAL0") {
 # Limpia la consola para que el usuario vea un fondo negro limpio al abrir
 Clear-Host
 
-# 1. CATALOGO COMPLETO DE PROGRAMAS CON ANCHO AMPLIADO
+# 1. CATALOGO COMPLETO DE PROGRAMAS
 $Categorias = [ordered]@{
     "Navegadores" = @(
         @{ Name = "Brave Browser"; Id = "Brave.Brave"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=brave.com&sz=64" },
@@ -40,70 +40,29 @@ $Categorias = [ordered]@{
         @{ Name = "SumatraPDF 64-bit (Portatil)"; Id = "https://www.sumatrapdfreader.org/dl/rel/3.6.1/SumatraPDF-3.6.1-64.zip"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=sumatrapdfreader.org&sz=64" }
     );
     "Suite ArtCraft (Clon de Adobe Suite)" = @(
-        @{ Name = "ArtCraft Launcher (Alternativa a Adobe Suite,PDFCraft, PhotoCraft, PhotoCraft y mas)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
+        @{ Name = "ArtCraft Launcher (Alternativa a Adobe Suite)"; Id = "https://getartcraft.com/download"; Type = "ArtCraft"; Icon = "https://www.google.com/s2/favicons?domain=getartcraft.com&sz=64" }
     );
     "Seguridad y Antivirus" = @(
-        @{ Name = "ESET Security / NOD32"; Id = "ESET.Security"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" }
+        @{ Name = "ESET Security / NOD32 (Winget)"; Id = "ESET.Security"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" },
+        @{ Name = "ESET NOD32 Antivirus"; Id = "https://download.eset.com/com/eset/apps/home/eav/windows/latest/eav_nt64.exe"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" },
+        @{ Name = "ESET Internet Security"; Id = "https://download.eset.com/com/eset/apps/home/eis/windows/latest/eis_nt64.exe"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" }
     );
-    
-    "Microsoft Office (Espanol)" = @(
-        #@{ Name = "Office 365"; Id = "OFFICE_365"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
-        @{ Name = "Office 2024 ProPlus"; Id = "OFFICE_2024"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" },
-        @{ Name = "Office 2021 ProPlus"; Id = "OFFICE_2021"; Type = "Office"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" }
+    "Microsoft Office (Instaladores Web)" = @(
+        @{ Name = "Office 2024 Pro Plus"; Id = "https://tinyurl.com/Office2024Online"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
+        @{ Name = "Office 2021 Pro Plus"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?productReleaseID=ProPlus2021Retail&platform=X64&language=es-ES&TaxRegion=pr"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
+        @{ Name = "Office 2019 Pro Plus"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=ProPlus2019Retail&language=es-ES&platform=x64&TaxRegion=PR"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
+        @{ Name = "Office 2016 Pro Plus"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=ProPlusRetail&language=es-ES&platform=x64&TaxRegion=PR"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
+        @{ Name = "Project Pro 2021"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=ProjectPro2021Retail&language=es-ES&platform=x64&TaxRegion=PR"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
+        @{ Name = "Project Pro 2019"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=ProjectPro2019Retail&language=es-ES&platform=x64&TaxRegion=PR"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
+        @{ Name = "Visio Pro 2021"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=VisioPro2021Retail&language=es-ES&platform=x64&TaxRegion=PR"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
+        @{ Name = "Visio Pro 2019"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=VisioPro2019Retail&language=es-ES&platform=x64&TaxRegion=PR"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" }
     );
     "Activadores y Licenciamiento" = @(
-        @{ Name = "Microsoft Activation Scripts (MAS) - Alternativo"; Id = "https://get.activated.win"; Type = "Script"; Icon = "https://www.google.com/s2/favicons?domain=massgrave.dev&sz=64" }
+        @{ Name = "Microsoft Activation Scripts (MAS)"; Id = "https://get.activated.win"; Type = "Script"; Icon = "https://www.google.com/s2/favicons?domain=massgrave.dev&sz=64" }
     );
 };
 
-# 2. FUNCION PARA INSTALAR OFFICE DESDE IMAGEN OFFLINE (.IMG) (2021 y 2024)
-function Instalar-Office ($Tipo) {
-    # 1. Definir enlace según la versión (Sin Office 365)
-    if ($Tipo -eq "OFFICE_2024") {
-        $VersionName = "Office 2024";
-        $ImgUrl = "https://officecdn.microsoft.com/db/492350f6-3a01-4f97-b9c0-c7c6ddf67d60/media/es-es/ProPlus2024Retail.img";
-    } elseif ($Tipo -eq "OFFICE_2021") {
-        $VersionName = "Office 2021";
-        $ImgUrl = "https://officecdn.microsoft.com/db/492350f6-3a01-4f97-b9c0-c7c6ddf67d60/media/es-es/ProPlus2021Retail.img";
-    } else {
-        Write-Host "Opción inválida o versión no soportada." -ForegroundColor Red;
-        return;
-    }
-
-    $ImgPath = "$env:TEMP\OfficeOffline.img";
-
-    Write-Host "Descargando instalador completo de $VersionName (Esto puede tardar dependiendo del internet)..." -ForegroundColor Yellow;
-    
-    # 2. Descargar el archivo .img desde el CDN oficial
-    Invoke-WebRequest -Uri $ImgUrl -OutFile $ImgPath;
-
-    if (Test-Path $ImgPath) {
-        Write-Host "Montando disco virtual..." -ForegroundColor Yellow;
-        
-        # 3. Montar la imagen virtual y obtener la letra del disco asignada
-        $Montaje = Mount-DiskImage -ImagePath $ImgPath -PassThru;
-        $LetraDisco = ($Montaje | Get-Volume).DriveLetter;
-        $SetupExe = "${LetraDisco}:\Setup.exe";
-
-        if (Test-Path $SetupExe) {
-            Write-Host "Instalando $VersionName..." -ForegroundColor Yellow;
-            # 4. Ejecutar el instalador
-            Start-Process -FilePath $SetupExe -Wait;
-        } else {
-            Write-Host "Error: No se encontró el Setup.exe en la imagen montada." -ForegroundColor Red;
-        }
-
-        # 5. Desmontar el disco virtual y limpiar el archivo pesado
-        Write-Host "Limpiando archivos temporales..." -ForegroundColor Yellow;
-        Dismount-DiskImage -ImagePath $ImgPath >$null;
-        Remove-Item -Path $ImgPath -Force;
-        
-    } else {
-        Write-Host "Error crítico: No se pudo descargar el archivo .img." -ForegroundColor Red;
-    }
-}
-
-# 3. DISEÑO VISUAL DE LA VENTANA (XAML ESTILO CTT CON SIDEBAR Y TARJETAS AMPLIAS)
+# 2. DISEÑO VISUAL DE LA VENTANA (XAML)
 [xml]$XAML = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         Title="Panel de Instalacion - RaYFoX18" Height="780" Width="1000"
@@ -123,7 +82,7 @@ function Instalar-Office ($Tipo) {
         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Instalador de Herramientas - RaYFoX18" 
                    FontSize="22" FontWeight="Bold" Foreground="#38BDF8" Margin="0,0,0,15"/>
 
-        <!-- Barra Lateral de Acciones (Estilo CTT Sidebar) -->
+        <!-- Barra Lateral de Acciones -->
         <Border Grid.Row="1" Grid.Column="0" Background="#202024" CornerRadius="8" Padding="12" Margin="0,0,12,0">
             <StackPanel>
                 <TextBlock Text="Acciones" FontWeight="Bold" Foreground="#38BDF8" FontSize="14" Margin="0,0,0,10"/>
@@ -139,7 +98,7 @@ function Instalar-Office ($Tipo) {
             </StackPanel>
         </Border>
 
-        <!-- Área Principal de Categorías y Tarjetas con Ancho Ampliado -->
+        <!-- Área Principal de Categorías y Tarjetas -->
         <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto">
             <StackPanel Name="PanelCategorias" Margin="0,0,5,0"/>
         </ScrollViewer>
@@ -163,7 +122,7 @@ function Actualizar-Contador {
     $TxtContador.Text = "Seleccionados: $Total";
 }
 
-# 4. GENERAR CATEGORIAS Y TARJETAS AMPLIADAS EN GRID
+# 3. GENERAR CATEGORIAS Y TARJETAS EN LA INTERFAZ
 foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.GroupBox;
     $Grupo.Header = " $Cat ";
     $Grupo.Foreground = "#38BDF8";
@@ -173,19 +132,17 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
 
     $Contenedor = New-Object System.Windows.Controls.WrapPanel;
     
-    foreach ($App in $Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
+    foreach ($App in$Categorias[$Cat]) {$CB = New-Object System.Windows.Controls.CheckBox;
         $CB.Tag =$App.Id;
         $CB.ToolTip =$App.Type;
-        $CB.Width = 320; # Ancho ampliado para evitar cortes en textos largos
+        $CB.Width = 320; # Ancho ampliado
         $CB.Height = 36;
         $CB.Margin = "6";
         $CB.Foreground = "#F4F4F5";
         
-        # Panel interno para acomodar Icono + Texto
         $StackCard = New-Object System.Windows.Controls.StackPanel;
         $StackCard.Orientation = "Horizontal";
 
-        # Agregar Icono Oficial
         if ($App.Icon) {$Img = New-Object System.Windows.Controls.Image;
             $Img.Width = 18;
             $Img.Height = 18;
@@ -201,7 +158,6 @@ foreach ($Cat in $Categorias.Keys) {$Grupo = New-Object System.Windows.Controls.
             $StackCard.Children.Add($Img) >$null;
         }
 
-        # Texto del Programa
         $Txt = New-Object System.Windows.Controls.TextBlock;
         $Txt.Text =$App.Name;
         $Txt.VerticalAlignment = "Center";
@@ -228,7 +184,7 @@ $BtnLimpiar.Add_Click({$ListaCheckboxes.ForEach({ $_.IsChecked =$false });
     Actualizar-Contador;
 });
 
-# 5. ACCION DEL BOTON INSTALAR
+# 4. ACCION DEL BOTON INSTALAR
 $BtnInstalar.Add_Click({
     $Seleccionados =$ListaCheckboxes.Where({ $_.IsChecked -eq$true });
     
@@ -239,10 +195,10 @@ $BtnInstalar.Add_Click({
 
     $Ventana.Close();
 
-    foreach ($Item in $Seleccionados) {
-        # Extraer el nombre de la aplicación de forma limpia
+    foreach ($Item in$Seleccionados) {
+        # Extraer el nombre de la aplicación
         $NombreApp = "";
-        foreach ($child in $Item.Content.Children) {
+        foreach ($child in$Item.Content.Children) {
             if ($child -is [System.Windows.Controls.TextBlock]) {
                 $NombreApp =$child.Text;
             }
@@ -251,11 +207,10 @@ $BtnInstalar.Add_Click({
         Write-Host "`n==========================================" -ForegroundColor DarkGray;
         Write-Host "Ejecutando: $NombreApp..." -ForegroundColor Cyan;
         
-        If ($Item.ToolTip -eq "Office") {
-            Instalar-Office -Tipo $Item.Tag;
-        } elseif ($Item.ToolTip -eq "Url") {
-            $NombreArchivo = [System.IO.Path]::GetFileName($Item.Tag);
-            $RutaDestino = "$env:TEMP\$NombreArchivo";
+        if ($Item.ToolTip -eq "Url") {
+            # Genera un nombre con .exe para que Windows reconozca los enlaces largos de Office y ejecutables
+            $RutaDestino = "$env:TEMP\Instalador_$(Get-Random).exe";
+            Write-Host "Descargando instalador de $NombreApp..." -ForegroundColor Yellow;
             Invoke-WebRequest -Uri $Item.Tag -OutFile $RutaDestino;
             Start-Process -FilePath $RutaDestino -Wait;
         } elseif ($Item.ToolTip -eq "DescargaEscritorio") {
