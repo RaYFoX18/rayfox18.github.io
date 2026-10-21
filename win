@@ -1,9 +1,7 @@
 Add-Type -AssemblyName PresentationFramework;
+Add-Type -AssemblyName WindowsBase;
 Add-Type -AssemblyName System.Windows.Forms;
 
-# ==========================================
-# MODO DESARROLLADOR Y CONTROL DE ERRORES
-# ==========================================
 if ($env:USERNAME -eq "soporte.PESPECIAL0" -or $env:USERNAME -eq "RFOX") {
     $ErrorActionPreference = "Continue"
 } else {
@@ -12,7 +10,6 @@ if ($env:USERNAME -eq "soporte.PESPECIAL0" -or $env:USERNAME -eq "RFOX") {
 
 Clear-Host
 
-# 1. CATALOGO COMPLETO DE PROGRAMAS
 $Categorias = [ordered]@{
     "Navegadores" = @(
         @{ Name = "Brave Browser"; Id = "Brave.Brave"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=brave.com&sz=64" },
@@ -34,9 +31,8 @@ $Categorias = [ordered]@{
         @{ Name = "WinRAR"; Id = "RARLab.WinRAR"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=rarlab.com&sz=64" },
         @{ Name = "WinZip"; Id = "Corel.WinZip"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=winzip.com&sz=64" },
         @{ Name = "Adobe Acrobat Reader"; Id = "Adobe.Acrobat.Reader.64-bit"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" },
-        @{ Name = "PDFCraft"; Id = "https://drive.google.com/uc?export=download&id=1S_71ZVyF5mqp8iWA2gUOhe6WzonnJsyn"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" },
-        @{ Name = "SumatraPDF 64-bit (Instalable)"; Id = "https://www.sumatrapdfreader.org/dl/rel/3.6.1/SumatraPDF-3.6.1-64-install.exe"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=sumatrapdfreader.org&sz=64" },
-        @{ Name = "SumatraPDF 64-bit (Portatil)"; Id = "https://www.sumatrapdfreader.org/dl/rel/3.6.1/SumatraPDF-3.6.1-64.zip"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=sumatrapdfreader.org&sz=64" }
+        @{ Name = "PDFCraft"; Id = "https://github.com/RaYFoX18/rayfox18.github.io/releases/download/HerramientasPortatilesV.1.0.0/PDFCraft.zip"; Type = "DescargaEscritorio"; Icon = "https://www.google.com/s2/favicons?domain=adobe.com&sz=64" },
+        @{ Name = "SumatraPDF 64-bit (Instalable)"; Id = "SumatraPDF.SumatraPDF"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=sumatrapdfreader.org&sz=64" }
     );
     "Archivos y Documentos" = @(
         @{ Name = "Foxit Reader"; Id = "Foxit.FoxitReader"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=foxit.com&sz=64" },
@@ -47,7 +43,6 @@ $Categorias = [ordered]@{
         @{ Name = "PeaZip"; Id = "Giorgiotani.PeaZip"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=peazip.it&sz=64" }
     );
     "Multimedia y Diseno" = @(
-        @{ Name = "AIMP"; Id = "AIMP.AIMP"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=aimp.ru&sz=64" },
         @{ Name = "foobar2000"; Id = "foobar2000.foobar2000"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=foobar2000.org&sz=64" },
         @{ Name = "Audacity"; Id = "Audacity.Audacity"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=audacityteam.org&sz=64" },
         @{ Name = "HandBrake"; Id = "HandBrake.HandBrake"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=handbrake.fr&sz=64" },
@@ -101,12 +96,11 @@ $Categorias = [ordered]@{
         @{ Name = "Microsoft OneDrive"; Id = "Microsoft.OneDrive"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" }
     );
     "Seguridad y Antivirus" = @(
-        @{ Name = "ESET Security / NOD32 (Winget)"; Id = "ESET.Security"; Type = "Winget"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" },
         @{ Name = "ESET NOD32 Antivirus"; Id = "https://download.eset.com/com/eset/apps/home/eav/windows/latest/eav_nt64.exe"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" },
         @{ Name = "ESET Internet Security"; Id = "https://download.eset.com/com/eset/apps/home/eis/windows/latest/eis_nt64.exe"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=eset.com&sz=64" }
     );
     "Microsoft Office (Instaladores Web)" = @(
-        @{ Name = "Office 2024 Pro Plus"; Id = "https://tinyurl.com/Office2024Online"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
+        @{ Name = "Office 2024 Pro Plus"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?productReleaseID=ProPlus2024Retail&platform=X64&language=es-ES&TaxRegion=pr"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
         @{ Name = "Office 2021 Pro Plus"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?productReleaseID=ProPlus2021Retail&platform=X64&language=es-ES&TaxRegion=pr"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
         @{ Name = "Office 2019 Pro Plus"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=ProPlus2019Retail&language=es-ES&platform=x64&TaxRegion=PR"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
         @{ Name = "Office 2016 Pro Plus"; Id = "https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=ProPlusRetail&language=es-ES&platform=x64&TaxRegion=PR"; Type = "Url"; Icon = "https://www.google.com/s2/favicons?domain=office.com&sz=64" },
@@ -120,31 +114,244 @@ $Categorias = [ordered]@{
     );
 };
 
-# 2. DISENO VISUAL DE LA VENTANA (LIBRE DE ERRORES DE INDENTACION)
+function Actualizar-UI-WPF {
+    [System.Windows.Threading.Dispatcher]::CurrentDispatcher.Invoke([Action]{}, [System.Windows.Threading.DispatcherPriority]::Background);
+}
+
+function Abrir-VentanaRFX18 ($SubtituloInicial) {
+    $RfxXaml = @(
+        '<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"'
+        '        Title="RFX18 - WINDOWS TOOLKIT" Height="500" Width="760"'
+        '        WindowStartupLocation="CenterScreen" Background="#070B10" Foreground="White"'
+        '        FontFamily="Segoe UI" ResizeMode="CanMinimize">'
+        '    <Border BorderBrush="#1A2634" BorderThickness="1" Padding="35,20,35,25">'
+        '        <Grid>'
+        '            <Grid.RowDefinitions>'
+        '                <RowDefinition Height="Auto"/>'
+        '                <RowDefinition Height="Auto"/>'
+        '                <RowDefinition Height="Auto"/>'
+        '                <RowDefinition Height="Auto"/>'
+        '                <RowDefinition Height="*"/>'
+        '                <RowDefinition Height="Auto"/>'
+        '            </Grid.RowDefinitions>'
+        '            <Viewbox Grid.Row="0" Height="135" HorizontalAlignment="Center" Margin="0,0,0,10">'
+        '                <Canvas Width="620" Height="165">'
+        '                    <Path Data="M 45,22 L 165,22 L 185,38 L 360,38 L 372,22" Stroke="#29C5F6" StrokeThickness="4" StrokeLineJoin="Round"/>'
+        '                    <Path Data="M 380,45 L 408,12 L 580,12" Stroke="#29C5F6" StrokeThickness="4" StrokeLineJoin="Round"/>'
+        '                    <Polygon Points="505,12 520,2 580,2 580,12" Fill="#29C5F6"/>'
+        '                    <Path Data="M 412,35 L 424,20 M 428,35 L 440,20" Stroke="#29C5F6" StrokeThickness="4"/>'
+        '                    <Path Data="M 455,22 L 580,22" Stroke="#29C5F6" StrokeThickness="3.5"/>'
+        '                    <TextBlock Text="RFX18" Canvas.Left="52" Canvas.Top="18" FontFamily="Arial Black, Impact, Segoe UI Black" FontSize="102" FontWeight="ExtraBold" Foreground="#29C5F6"/>'
+        '                    <Path Data="M 45,138 L 195,138 L 210,122" Stroke="#29C5F6" StrokeThickness="3.5"/>'
+        '                    <Path Data="M 218,138 L 230,122 M 234,138 L 246,122" Stroke="#29C5F6" StrokeThickness="4"/>'
+        '                    <Path Data="M 45,150 L 238,150 L 278,108" Stroke="#29C5F6" StrokeThickness="4" StrokeLineJoin="Round"/>'
+        '                    <Polygon Points="45,150 135,150 120,162 45,162" Fill="#29C5F6"/>'
+        '                    <Path Data="M 272,150 L 290,130 L 440,130 L 458,150 L 580,150" Stroke="#29C5F6" StrokeThickness="4" StrokeLineJoin="Round"/>'
+        '                    <Path Data="M 295,146 L 420,146" Stroke="#29C5F6" StrokeThickness="3"/>'
+        '                </Canvas>'
+        '            </Viewbox>'
+        '            <Border Grid.Row="1" Height="1.5" Background="#16698A" Margin="0,0,0,16"/>'
+        '            <StackPanel Grid.Row="2" Margin="0,0,0,12">'
+        '                <TextBlock Name="TxtTituloRfx" Text="RFX18  -  WINDOWS TOOLKIT" Foreground="White" FontSize="20" FontWeight="Bold" Margin="0,0,0,5"/>'
+        '                <TextBlock Name="TxtSubtituloRfx" Text="Progreso de instalacion y mantenimiento" Foreground="#29C5F6" FontSize="16"/>'
+        '            </StackPanel>'
+        '            <Grid Grid.Row="3" Height="36" Margin="0,0,0,16">'
+        '                <ProgressBar Name="BarraRfx" Background="#05080C" Foreground="#29C5F6" BorderBrush="#29C5F6" BorderThickness="1.5" Minimum="0" Maximum="100" Value="0"/>'
+        '                <TextBlock Name="TxtPorcentajeRfx" Text="0% Completado" Foreground="#05080C" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Margin="14,0,0,0"/>'
+        '            </Grid>'
+        '            <ScrollViewer Name="ScrollLogs" Grid.Row="4" VerticalScrollBarVisibility="Auto">'
+        '                <StackPanel Name="PanelLogsRfx"/>'
+        '            </ScrollViewer>'
+        '            <Button Name="BtnCerrarRfx" Grid.Row="5" Content="VOLVER AL PANEL PRINCIPAL" Height="36" Margin="0,12,0,0" Background="#0D2533" Foreground="#29C5F6" BorderBrush="#29C5F6" BorderThickness="1" FontWeight="Bold" FontSize="13" Cursor="Hand" Visibility="Collapsed"/>'
+        '        </Grid>'
+        '    </Border>'
+        '</Window>'
+    ) -join "`n";
+
+    [xml]$XmlR =$RfxXaml;
+    $ReaderR = New-Object System.Xml.XmlNodeReader $XmlR;
+    $WinR = [Windows.Markup.XamlReader]::Load($ReaderR);
+
+    $UI = @{
+        Window     = $WinR
+        Titulo     = $WinR.FindName("TxtTituloRfx")
+        Subtitulo  = $WinR.FindName("TxtSubtituloRfx")
+        Barra      = $WinR.FindName("BarraRfx")
+        Porcentaje = $WinR.FindName("TxtPorcentajeRfx")
+        PanelLogs  = $WinR.FindName("PanelLogsRfx")
+        Scroll     = $WinR.FindName("ScrollLogs")
+        BtnCerrar  = $WinR.FindName("BtnCerrarRfx")
+        EsCian     = $true
+    };
+
+    if ($SubtituloInicial) { $UI.Subtitulo.Text =$SubtituloInicial; }
+    $UI.BtnCerrar.Add_Click({$WinR.Close() });
+
+    return $UI;
+}
+
+function Actualizar-ProgresoRFX18 ($UI,$MensajeLinea, $Subtitulo,$Porcentaje) {
+    if ($Subtitulo) { $UI.Subtitulo.Text =$Subtitulo; }
+    if ($null -ne $Porcentaje) {
+        $Valor = [math]::Round($Porcentaje);
+        $UI.Barra.Value =$Valor;
+        $SimboloPorc = [char]37;
+        $UI.Porcentaje.Text = "$Valor$SimboloPorc Completado";
+        if ($Valor -lt 18) {$UI.Porcentaje.Foreground = "#29C5F6";
+        } else {
+            $UI.Porcentaje.Foreground = "#05080C";
+        }
+    }
+    if ($MensajeLinea) {$TxtLinea = New-Object System.Windows.Controls.TextBlock;
+        $TxtLinea.Text =$MensajeLinea;
+        $TxtLinea.FontSize = 15;
+        $TxtLinea.Margin = "0,2,0,2";
+        if ($UI.EsCian) {$TxtLinea.Foreground = "#29C5F6";
+            $UI.EsCian =$false;
+        } else {
+            $TxtLinea.Foreground = "#9CA3AF";
+            $UI.EsCian =$true;
+        }
+        $UI.PanelLogs.Children.Add($TxtLinea) >$null;
+        $UI.Scroll.ScrollToEnd();
+    }
+    Actualizar-UI-WPF;
+}
+
+function Ejecutar-ProcesoSinCongelar ($UI,$FilePath, $ArgumentList) {$Psi = New-Object System.Diagnostics.ProcessStartInfo;
+    $Psi.FileName =$FilePath;
+    $Psi.Arguments =$ArgumentList;
+    $Psi.UseShellExecute =$false;
+    $Psi.CreateNoWindow =$true;
+    $Psi.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden;
+
+    $Proc = [System.Diagnostics.Process]::Start($Psi);
+    
+    while (-not $Proc.HasExited) {
+        Actualizar-UI-WPF;
+        Start-Sleep -Milliseconds 150;
+    }
+}
+
+function Descargar-ArchivoConTimeout ($UI, $Url, $Destino, $Nombre) {
+    $Proceso = $null
+
+    try {
+        $DirectorioPadre = Split-Path -Path $Destino -Parent
+        if (-not (Test-Path -LiteralPath $DirectorioPadre)) {
+            New-Item -ItemType Directory -Path $DirectorioPadre -Force -ErrorAction Stop | Out-Null
+        }
+
+        if (Test-Path -LiteralPath $Destino) {
+            Remove-Item -LiteralPath $Destino -Force -ErrorAction SilentlyContinue
+        }
+
+        if ([string]::IsNullOrWhiteSpace($Url)) {
+            throw 'La URL de descarga esta vacia.'
+        }
+
+        # curl comprueba errores HTTP y sigue redirecciones de GitHub Releases.
+        $Psi = New-Object System.Diagnostics.ProcessStartInfo
+        $Psi.FileName = 'curl.exe'
+        $Psi.Arguments = '--fail --location --silent --show-error --user-agent "Mozilla/5.0" --connect-timeout 30 --max-time 300 --output "' + $Destino + '" "' + $Url + '"'
+        $Psi.UseShellExecute = $false
+        $Psi.CreateNoWindow = $true
+        $Psi.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden
+
+        $Proceso = [System.Diagnostics.Process]::Start($Psi)
+        while (-not $Proceso.HasExited) {
+            if (Test-Path -LiteralPath $Destino) {
+                $ArchivoTemporal = Get-Item -LiteralPath $Destino -ErrorAction SilentlyContinue
+                if ($ArchivoTemporal) {
+                    $MbActuales = [math]::Round(($ArchivoTemporal.Length / 1MB), 1)
+                    Actualizar-ProgresoRFX18 $UI $null "Descargando $Nombre`: $MbActuales MB recibidos..." $null
+                }
+            }
+            Actualizar-UI-WPF
+            Start-Sleep -Milliseconds 200
+        }
+
+        if ($Proceso.ExitCode -ne 0) {
+            throw "curl.exe fallo con codigo $($Proceso.ExitCode). Verifica el enlace, la conexion y que el archivo exista en GitHub."
+        }
+
+        if (-not (Test-Path -LiteralPath $Destino)) {
+            throw 'La descarga termino, pero no se creo el archivo.'
+        }
+
+        $Archivo = Get-Item -LiteralPath $Destino -ErrorAction Stop
+        if ($Archivo.Length -le 1MB) {
+            throw "El archivo descargado solo pesa $([math]::Round($Archivo.Length / 1KB, 1)) KB. Puede ser una pagina de error en lugar del archivo esperado."
+        }
+
+        # Si la descarga es ZIP, comprobar que se pueda abrir como archivo comprimido.
+        if ([System.IO.Path]::GetExtension($Destino) -ieq '.zip') {
+            Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
+            try {
+                $Zip = [System.IO.Compression.ZipFile]::OpenRead($Destino)
+                $Zip.Dispose()
+            }
+            catch {
+                throw 'El archivo recibido no parece ser un ZIP valido o esta incompleto.'
+            }
+        }
+
+        Actualizar-ProgresoRFX18 $UI "$Nombre descargado correctamente." 'Descarga finalizada' 100
+        return $true
+    }
+    catch {
+        $MensajeError = $_.Exception.Message
+        Write-Warning "Error descargando ${Nombre}: $MensajeError"
+        Actualizar-ProgresoRFX18 $UI "Error descargando ${Nombre}: $MensajeError" 'Error de descarga' $null
+
+        if (Test-Path -LiteralPath $Destino) {
+            Remove-Item -LiteralPath $Destino -Force -ErrorAction SilentlyContinue
+        }
+        return $false
+    }
+    finally {
+        if ($Proceso) { $Proceso.Dispose() }
+    }
+}
+
+$SplashUI = Abrir-VentanaRFX18 "Progreso de instalacion y mantenimiento";
+$SplashUI.Window.Show();
+Actualizar-ProgresoRFX18 $SplashUI "Desempaquetando archivos del sistema..." $null 25;
+Start-Sleep -Milliseconds 300;
+Actualizar-ProgresoRFX18 $SplashUI "Aplicando optimizaciones de Windows..." $null 50;
+Start-Sleep -Milliseconds 300;
+Actualizar-ProgresoRFX18 $SplashUI "Instalando herramientas y utilidades..." $null 75;
+Start-Sleep -Milliseconds 300;
+Actualizar-ProgresoRFX18 $SplashUI "Configurando el entorno de usuario..." $null 100;
+Start-Sleep -Milliseconds 350;
+
 $XamlString = @(
     '<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"'
-    '        Title="Panel de Instalacion y Booteo - RaYFoX18" Height="800" Width="1020"'
-    '        WindowStartupLocation="CenterScreen" Background="#18181B" Foreground="White">'
+    '        Title="RFX18 - WINDOWS TOOLKIT (Panel Principal)" Height="800" Width="1020"'
+    '        WindowStartupLocation="CenterScreen" Background="#0B0F17" Foreground="White">'
     '    <Grid Margin="15">'
     '        <Grid.RowDefinitions>'
     '            <RowDefinition Height="Auto"/>'
     '            <RowDefinition Height="*"/>'
     '        </Grid.RowDefinitions>'
-    '        <TextBlock Grid.Row="0" Text="Toolkit de Soporte Tecnico - RaYFoX18" FontSize="22" FontWeight="Bold" Foreground="#38BDF8" Margin="0,0,0,12"/>'
-    '        <TabControl Grid.Row="1" Background="#18181B" BorderBrush="#3F3F46" Padding="8">'
-    '            <TabItem Header=" [1] Catalogo de Programas " FontSize="14" FontWeight="Bold" Foreground="#38BDF8" Background="#27272A">'
+    '        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">'
+    '            <TextBlock Text="RFX18" FontSize="24" FontWeight="ExtraBold" Foreground="#29C5F6" Margin="0,0,10,0"/>'
+    '            <TextBlock Text="- WINDOWS TOOLKIT (Permanece abierto hasta que lo cierres)" FontSize="18" FontWeight="SemiBold" Foreground="#E4E4E7" VerticalAlignment="Center"/>'
+    '        </StackPanel>'
+    '        <TabControl Grid.Row="1" Background="#0B0F17" BorderBrush="#1E293B" Padding="8">'
+    '            <TabItem Header=" [1] Catalogo de Programas " FontSize="14" FontWeight="Bold" Foreground="#29C5F6" Background="#161F30">'
     '                <Grid Margin="0,10,0,0">'
     '                    <Grid.ColumnDefinitions>'
     '                        <ColumnDefinition Width="220"/>'
     '                        <ColumnDefinition Width="*"/>'
     '                    </Grid.ColumnDefinitions>'
-    '                    <Border Grid.Column="0" Background="#202024" CornerRadius="8" Padding="12" Margin="0,0,12,0">'
+    '                    <Border Grid.Column="0" Background="#111827" CornerRadius="8" Padding="12" Margin="0,0,12,0" BorderBrush="#1E293B" BorderThickness="1">'
     '                        <StackPanel>'
-    '                            <TextBlock Text="Acciones" FontWeight="Bold" Foreground="#38BDF8" FontSize="14" Margin="0,0,0,10"/>'
-    '                            <Button Name="BtnSeleccionarTodo" Content="Seleccionar Todo" Height="32" Margin="0,0,0,8" Background="#27272A" Foreground="White" BorderThickness="0" Cursor="Hand"/>'
-    '                            <Button Name="BtnLimpiar" Content="Limpiar Seleccion" Height="32" Margin="0,0,0,15" Background="#27272A" Foreground="White" BorderThickness="0" Cursor="Hand"/>'
-    '                            <Separator Background="#3F3F46" Margin="0,0,0,15"/>'
-    '                            <TextBlock Name="TxtContador" Text="Seleccionados: 0" FontSize="13" Foreground="#A1A1AA" Margin="0,0,0,15"/>'
+    '                            <TextBlock Text="Acciones" FontWeight="Bold" Foreground="#29C5F6" FontSize="14" Margin="0,0,0,10"/>'
+    '                            <Button Name="BtnSeleccionarTodo" Content="Seleccionar Todo" Height="32" Margin="0,0,0,8" Background="#1E293B" Foreground="White" BorderThickness="0" Cursor="Hand"/>'
+    '                            <Button Name="BtnLimpiar" Content="Limpiar Seleccion" Height="32" Margin="0,0,0,15" Background="#1E293B" Foreground="White" BorderThickness="0" Cursor="Hand"/>'
+    '                            <Separator Background="#1E293B" Margin="0,0,0,15"/>'
+    '                            <TextBlock Name="TxtContador" Text="Seleccionados: 0" FontSize="13" Foreground="#9CA3AF" Margin="0,0,0,15"/>'
     '                            <Button Name="BtnInstalar" Content="Instalar Ahora" Height="45" Background="#0284C7" Foreground="White" FontSize="14" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>'
     '                        </StackPanel>'
     '                    </Border>'
@@ -153,18 +360,18 @@ $XamlString = @(
     '                    </ScrollViewer>'
     '                </Grid>'
     '            </TabItem>'
-    '            <TabItem Header=" [2] Booteador USB (ISO Local) " FontSize="14" FontWeight="Bold" Foreground="#38BDF8" Background="#27272A">'
-    '                <Border Background="#202024" CornerRadius="8" Padding="25" Margin="10">'
+    '            <TabItem Header=" [2] Booteador USB (ISO Local) " FontSize="14" FontWeight="Bold" Foreground="#29C5F6" Background="#161F30">'
+    '                <Border Background="#111827" CornerRadius="8" Padding="25" Margin="10" BorderBrush="#1E293B" BorderThickness="1">'
     '                    <StackPanel MaxWidth="680" HorizontalAlignment="Left">'
-    '                        <TextBlock Text="Creador de USB Booteable (Windows 10 / 11)" FontSize="18" FontWeight="Bold" Foreground="#38BDF8" Margin="0,0,0,8"/>'
-    '                        <TextBlock Text="Selecciona una imagen .ISO guardada en tu equipo y prepara la memoria USB en formato MBR (BIOS Legacy) o GPT (UEFI)." Foreground="#A1A1AA" FontSize="13" Margin="0,0,0,22" TextWrapping="Wrap"/>'
+    '                        <TextBlock Text="Creador de USB Booteable (Windows 10 / 11)" FontSize="18" FontWeight="Bold" Foreground="#29C5F6" Margin="0,0,0,8"/>'
+    '                        <TextBlock Text="Selecciona una imagen .ISO guardada en tu equipo y prepara la memoria USB en formato MBR (BIOS Legacy) o GPT (UEFI)." Foreground="#9CA3AF" FontSize="13" Margin="0,0,0,22" TextWrapping="Wrap"/>'
     '                        <TextBlock Text="1. Imagen ISO en tu PC:" FontWeight="Bold" Foreground="White" Margin="0,0,0,6"/>'
     '                        <Grid Margin="0,0,0,18">'
     '                            <Grid.ColumnDefinitions>'
     '                                <ColumnDefinition Width="*"/>'
     '                                <ColumnDefinition Width="150"/>'
     '                            </Grid.ColumnDefinitions>'
-    '                            <TextBox Name="TxtRutaIso" Grid.Column="0" Height="34" Background="#18181B" Foreground="#E4E4E7" BorderBrush="#3F3F46" VerticalContentAlignment="Center" Padding="8,0" IsReadOnly="True" Text="Ningun archivo ISO seleccionado..."/>'
+    '                            <TextBox Name="TxtRutaIso" Grid.Column="0" Height="34" Background="#0B0F17" Foreground="#E4E4E7" BorderBrush="#1E293B" VerticalContentAlignment="Center" Padding="8,0" IsReadOnly="True" Text="Ningun archivo ISO seleccionado..."/>'
     '                            <Button Name="BtnBuscarIso" Grid.Column="1" Content="Buscar ISO..." Height="34" Margin="10,0,0,0" Background="#0284C7" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>'
     '                        </Grid>'
     '                        <TextBlock Text="2. Memoria USB Destino (Se borraran todos sus datos):" FontWeight="Bold" Foreground="White" Margin="0,0,0,6"/>'
@@ -174,7 +381,7 @@ $XamlString = @(
     '                                <ColumnDefinition Width="150"/>'
     '                            </Grid.ColumnDefinitions>'
     '                            <ComboBox Name="CmbUnidadesUsb" Grid.Column="0" Height="34" VerticalContentAlignment="Center" Padding="8,0"/>'
-    '                            <Button Name="BtnRefrescarUsb" Grid.Column="1" Content="Actualizar USB" Height="34" Margin="10,0,0,0" Background="#27272A" Foreground="White" BorderThickness="0" Cursor="Hand"/>'
+    '                            <Button Name="BtnRefrescarUsb" Grid.Column="1" Content="Actualizar USB" Height="34" Margin="10,0,0,0" Background="#1E293B" Foreground="White" BorderThickness="0" Cursor="Hand"/>'
     '                        </Grid>'
     '                        <TextBlock Text="3. Esquema de Particion y Sistema Destino:" FontWeight="Bold" Foreground="White" Margin="0,0,0,8"/>'
     '                        <StackPanel Orientation="Horizontal" Margin="0,0,0,18">'
@@ -182,8 +389,8 @@ $XamlString = @(
     '                            <RadioButton Name="RbMBR" Content="MBR (BIOS Legacy / CSM Antiguo - NTFS)" Foreground="#F4F4F5" FontSize="13" VerticalContentAlignment="Center"/>'
     '                        </StackPanel>'
     '                        <TextBlock Text="4. Opciones de Parcheo (Windows 11):" FontWeight="Bold" Foreground="White" Margin="0,0,0,8"/>'
-    '                        <CheckBox Name="ChkBypassWin11" Content="Saltar requisitos de TPM 2.0, Secure Boot y RAM minima (Inyecta LabConfig en el USB)" IsChecked="True" Foreground="#A1A1AA" FontSize="13" Margin="0,0,0,22"/>'
-    '                        <Separator Background="#3F3F46" Margin="0,0,0,20"/>'
+    '                        <CheckBox Name="ChkBypassWin11" Content="Saltar requisitos de TPM 2.0, Secure Boot y RAM minima (Inyecta LabConfig en el USB)" IsChecked="True" Foreground="#9CA3AF" FontSize="13" Margin="0,0,0,22"/>'
+    '                        <Separator Background="#1E293B" Margin="0,0,0,20"/>'
     '                        <Grid>'
     '                            <Grid.ColumnDefinitions>'
     '                                <ColumnDefinition Width="*"/>'
@@ -192,7 +399,7 @@ $XamlString = @(
     '                            <Button Name="BtnIniciarBooteo" Grid.Column="0" Content="FORMATEAR Y CREAR USB BOOTEABLE" Height="46" Background="#16A34A" Foreground="White" FontSize="14" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>'
     '                            <Button Name="BtnAbrirRufus" Grid.Column="1" Content="Abrir en Rufus Portable" Height="46" Margin="12,0,0,0" Background="#EA580C" Foreground="White" FontSize="13" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>'
     '                        </Grid>'
-    '                        <TextBlock Name="TxtEstadoBooteo" Text="Estado: Esperando configuracion..." Foreground="#38BDF8" FontSize="13" FontWeight="Bold" Margin="0,16,0,0"/>'
+    '                        <TextBlock Name="TxtEstadoBooteo" Text="Estado: Esperando configuracion..." Foreground="#29C5F6" FontSize="13" FontWeight="Bold" Margin="0,16,0,0"/>'
     '                    </StackPanel>'
     '                </Border>'
     '            </TabItem>'
@@ -202,17 +409,16 @@ $XamlString = @(
 ) -join "`n";
 
 [xml]$XAML = $XamlString;
+$Reader = New-Object System.Xml.XmlNodeReader $XmlR -ErrorAction SilentlyContinue;
 $Reader = New-Object System.Xml.XmlNodeReader $XAML;
 $Ventana = [Windows.Markup.XamlReader]::Load($Reader);
 
-# Controles Pestana 1
 $PanelCategorias = $Ventana.FindName("PanelCategorias");
 $BtnInstalar = $Ventana.FindName("BtnInstalar");
 $BtnSeleccionarTodo = $Ventana.FindName("BtnSeleccionarTodo");
 $BtnLimpiar = $Ventana.FindName("BtnLimpiar");
 $TxtContador = $Ventana.FindName("TxtContador");
 
-# Controles Pestana 2 (Booteador)
 $TxtRutaIso = $Ventana.FindName("TxtRutaIso");
 $BtnBuscarIso = $Ventana.FindName("BtnBuscarIso");
 $CmbUnidadesUsb = $Ventana.FindName("CmbUnidadesUsb");
@@ -231,12 +437,11 @@ function Actualizar-Contador {
     $TxtContador.Text = "Seleccionados: $Total";
 }
 
-# 3. GENERAR CATEGORIAS Y TARJETAS EN LA INTERFAZ
 foreach ($Cat in $Categorias.Keys) {
     $Grupo = New-Object System.Windows.Controls.GroupBox;
     $Grupo.Header = " $Cat ";
-    $Grupo.Foreground = "#38BDF8";
-    $Grupo.BorderBrush = "#3F3F46";
+    $Grupo.Foreground = "#29C5F6";
+    $Grupo.BorderBrush = "#1E293B";
     $Grupo.Margin = "0,0,0,12";
     $Grupo.Padding = "8";
 
@@ -289,6 +494,8 @@ foreach ($Cat in $Categorias.Keys) {
     $PanelCategorias.Children.Add($Grupo) >$null;
 }
 
+$SplashUI.Window.Close();
+
 $BtnSeleccionarTodo.Add_Click({
     $ListaCheckboxes.ForEach({ $_.IsChecked = $true });
     Actualizar-Contador;
@@ -299,12 +506,10 @@ $BtnLimpiar.Add_Click({
     Actualizar-Contador;
 });
 
-# ==========================================
-# 4. FUNCIONES DEL BOOTEADOR USB (ISO LOCAL)
-# ==========================================
 function Cargar-UnidadesUSB {
     $CmbUnidadesUsb.Items.Clear();
-    $DiscosUsb = Get-Disk | Where-Object { $_.BusType -eq 'Usb' };
+    $TodosLosDiscos = Get-Disk;
+    $DiscosUsb = $TodosLosDiscos.Where({ $_.BusType -eq 'Usb' });
     foreach ($Disco in $DiscosUsb) {
         $TamanoGB = [math]::Round($Disco.Size / 1GB, 1);
         $Item = New-Object System.Windows.Controls.ComboBoxItem;
@@ -327,7 +532,7 @@ $BtnRefrescarUsb.Add_Click({
 $BtnBuscarIso.Add_Click({
     $Dialogo = New-Object System.Windows.Forms.OpenFileDialog;
     $Dialogo.Title = "Selecciona la imagen ISO de Windows";
-    $Dialogo.Filter = "Archivos de Imagen ISO (*.iso)|*.iso|Todos los archivos (*.*)|*.*";
+    $Dialogo.Filter = "Archivos de Imagen ISO (*.iso)|*.iso";
     if ($Dialogo.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         $TxtRutaIso.Text = $Dialogo.FileName;
         $TxtEstadoBooteo.Text = "Estado: ISO cargada lista para bootear.";
@@ -337,8 +542,11 @@ $BtnBuscarIso.Add_Click({
 $BtnAbrirRufus.Add_Click({
     $RutaRufus = "$env:TEMP\rufus_portable.exe";
     if (-not (Test-Path $RutaRufus)) {
-        $TxtEstadoBooteo.Text = "Estado: Descargando Rufus Portable ligero...";
-        Invoke-WebRequest -Uri "https://github.com/pbatard/rufus/releases/download/v4.5/rufus-4.5p.exe" -OutFile $RutaRufus;
+        $TxtEstadoBooteo.Text = "Estado: Descargando Rufus Portable...";
+        $WcRufus = New-Object System.Net.WebClient;
+        $WcRufus.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+        $WcRufus.DownloadFile("https://github.com/pbatard/rufus/releases/download/v4.5/rufus-4.5p.exe", $RutaRufus);
+        $WcRufus.Dispose();
     }
     Start-Process -FilePath $RutaRufus;
     $TxtEstadoBooteo.Text = "Estado: Rufus Portable abierto.";
@@ -366,18 +574,15 @@ $BtnIniciarBooteo.Add_Click({
 
     if ($Confirmar -ne "Yes") { return; }
 
-    $Ventana.Close();
-
-    Write-Host "`n==========================================" -ForegroundColor Cyan;
-    Write-Host "INICIANDO CREACION DE USB BOOTEABLE ($Esquema)" -ForegroundColor Cyan;
-    Write-Host "==========================================" -ForegroundColor Cyan;
+    $ProcUI = Abrir-VentanaRFX18 "Creacion de unidad USB Booteable ($Esquema)";
+    $ProcUI.Window.Show();
+    Actualizar-ProgresoRFX18 $ProcUI "Limpiando y preparando $NombreUsb en formato $Esquema..." $null 15;
 
     try {
-        Write-Host "[1/5] Limpiando y preparando el Disco $NumDisco en modo $Esquema..." -ForegroundColor Yellow;
         Clear-Disk -Number $NumDisco -RemoveData -RemoveOEM -Confirm:$false -ErrorAction Stop;
         Initialize-Disk -Number $NumDisco -PartitionStyle $Esquema -ErrorAction Stop;
 
-        Write-Host "[2/5] Creando particion activa y formateando unidad..." -ForegroundColor Yellow;
+        Actualizar-ProgresoRFX18 $ProcUI "Creando particion activa y aplicando formato NTFS..." $null 30;
         if ($Esquema -eq "MBR") {
             $Particion = New-Partition -DiskNumber $NumDisco -UseMaximumSize -IsActive -AssignDriveLetter;
         } else {
@@ -385,22 +590,23 @@ $BtnIniciarBooteo.Add_Click({
         }
         
         Format-Volume -Partition $Particion -FileSystem NTFS -NewFileSystemLabel "WIN_BOOT" -Confirm:$false >$null;
-        $LetraUsb = $Particion.DriveLetter;
+        $LetraUsb =$Particion.DriveLetter;
 
-        Write-Host "[3/5] Montando imagen ISO local ($RutaIso)..." -ForegroundColor Yellow;
+        Actualizar-ProgresoRFX18 $ProcUI "Montando imagen ISO local ($RutaIso)..." $null 45;
         $Montaje = Mount-DiskImage -ImagePath $RutaIso -PassThru;
-        $LetraIso = ($Montaje | Get-Volume).DriveLetter;
+        $VolumenIso = Get-Volume -DiskImage $Montaje;
+        $LetraIso =$VolumenIso.DriveLetter;
 
         if ($Esquema -eq "MBR" -and (Test-Path "${LetraIso}:\boot\bootsect.exe")) {
-            Write-Host "Instalando sector de arranque BIOS Legacy (bootsect /nt60)..." -ForegroundColor Cyan;
-            Start-Process -FilePath "${LetraIso}:\boot\bootsect.exe" -ArgumentList "/nt60 ${LetraUsb}: /mbr" -NoNewWindow -Wait;
+            Actualizar-ProgresoRFX18 $ProcUI "Configurando sector de arranque BIOS Legacy (bootsect /nt60)..." $null 60;
+            Ejecutar-ProcesoSinCongelar $ProcUI "${LetraIso}:\boot\bootsect.exe" "/nt60 ${LetraUsb}: /mbr";
         }
 
-        Write-Host "[4/5] Copiando todos los archivos de Windows al USB (${LetraUsb}:)... Esto tomara unos minutos." -ForegroundColor Yellow;
-        robocopy "${LetraIso}:\" "${LetraUsb}:\" /E /J /NFL /NDL /NJH /NJS /NC /NS
+        Actualizar-ProgresoRFX18 $ProcUI "Desempaquetando y copiando archivos del sistema a ${LetraUsb}:\..." $null 65;
+        Ejecutar-ProcesoSinCongelar $ProcUI "robocopy.exe" "${LetraIso}:\ ${LetraUsb}:\ /E /J /NFL /NDL /NJH /NJS /NC /NS";
 
         if ($ChkBypassWin11.IsChecked) {
-            Write-Host "Aplicando archivo de salto de requisitos TPM 2.0 / SecureBoot en el USB..." -ForegroundColor Cyan;
+            Actualizar-ProgresoRFX18 $ProcUI "Aplicando optimizaciones de Windows 11 (Bypass TPM 2.0 / SecureBoot)..." $null 90;
             $RegBypass = @(
                 'Windows Registry Editor Version 5.00'
                 ''
@@ -410,73 +616,135 @@ $BtnIniciarBooteo.Add_Click({
                 '"BypassRAMCheck"=dword:00000001'
                 '"BypassStorageCheck"=dword:00000001'
                 '"BypassCPUCheck"=dword:00000001'
-            ) -join "`r`n";
-            $RegBypass | Out-File -FilePath "${LetraUsb}:\Bypass_Win11_TPM.reg" -Encoding ASCII;
+            );
+            [System.IO.File]::WriteAllLines("${LetraUsb}:\Bypass_Win11_TPM.reg", $RegBypass);
         }
 
-        Write-Host "[5/5] Desmontando imagen ISO..." -ForegroundColor Yellow;
         Dismount-DiskImage -ImagePath $RutaIso >$null;
-
-        Write-Host "`nMEMORIA USB BOOTEABLE CREADA CON EXITO EN ${LetraUsb}: ($Esquema)!" -ForegroundColor Green;
+        Actualizar-ProgresoRFX18 $ProcUI "Memoria USB Booteable finalizada con exito en ${LetraUsb}: ($Esquema)." "Proceso finalizado correctamente" 100;
     } catch {
-        Write-Host "Ocurrio un error durante la creacion del USB: $($_.Exception.Message)" -ForegroundColor Red;
+        Actualizar-ProgresoRFX18 $ProcUI "Error durante el proceso: $($_.Exception.Message)" "Error en la operacion" 100;
         if ($RutaIso) { Dismount-DiskImage -ImagePath $RutaIso -ErrorAction SilentlyContinue >$null; }
     }
+
+    $ProcUI.BtnCerrar.Visibility = "Visible";
 });
 
-# ==========================================
-# 5. ACCION DEL BOTON INSTALAR (PROGRAMAS)
-# ==========================================
 $BtnInstalar.Add_Click({
-    $Seleccionados =$ListaCheckboxes.Where({ $_.IsChecked -eq$true });
+    $Seleccionados = @($ListaCheckboxes | Where-Object { $_.IsChecked -eq $true });
     
     if ($Seleccionados.Count -eq 0) {
         [System.Windows.MessageBox]::Show("Marca al menos un programa para instalar.", "Aviso");
         return;
     }
 
-    $Ventana.Close();
-
-    foreach ($Item in $Seleccionados) {$NombreApp = "";
+    $ColaProcesamiento = @();
+    foreach ($Item in $Seleccionados) {$Nom = "";
         foreach ($child in $Item.Content.Children) {
             if ($child -is [System.Windows.Controls.TextBlock]) {
-                $NombreApp =$child.Text;
+                $Nom =$child.Text;
             }
         }
+        $TipoApp = [string]$Item.ToolTip;
+        $UrlOId  = [string]$Item.Tag;
+
+        $ColaProcesamiento += [PSCustomObject]@{
+            Nombre = $Nom
+            Tipo   = $TipoApp
+            IdUrl  = $UrlOId
+            EsComp = ($TipoApp -eq "DescargaEscritorio")
+        };
+    }
+
+    $ColaProcesamiento = @($ColaProcesamiento | Sort-Object { if ($_.EsComp) { 1 } else { 0 } });
+
+    $ProcUI = Abrir-VentanaRFX18 "Progreso de instalacion y mantenimiento";
+    $ProcUI.Window.Show();
+    Actualizar-UI-WPF;
+
+    $TotalApps =$ColaProcesamiento.Count;
+    $ContadorActual = 0;
+    $SeDescargaronComprimidos =$false;
+
+    $CarpetaBasePortatiles = "C:\HerramientasPortatiles";
+    if (-not (Test-Path $CarpetaBasePortatiles)) {
+        New-Item -ItemType Directory -Path $CarpetaBasePortatiles -Force | Out-Null;
+    }
+
+    foreach ($App in $ColaProcesamiento) {$ContadorActual++;
+        $NombreApp =$App.Nombre;
         
-        Write-Host "`n==========================================" -ForegroundColor DarkGray;
-        Write-Host "Ejecutando: $NombreApp..." -ForegroundColor Cyan;
-        
-        if ($Item.ToolTip -eq "Url") {
-            $UrlFinal = $Item.Tag;
-            if ($UrlFinal -like "*drive.google.com*") {
-                if ($UrlFinal -match "/d/([a-zA-Z0-9_-]+)") {
-                    $FileId = $Matches[1];
-                    $UrlFinal = "https://drive.google.com/uc?export=download&id=$FileId";
-                }
+        $PorcInicio = [math]::Round((($ContadorActual - 1) /$TotalApps) * 100);
+        $PorcMedio  = [math]::Round((($ContadorActual - 0.4) / $TotalApps) * 100);$PorcFin    = [math]::Round(($ContadorActual / $TotalApps) * 100);
+
+        Actualizar-ProgresoRFX18 $ProcUI "Procesando: $NombreApp..." "Instalando [$ContadorActual de$TotalApps]: $NombreApp" $PorcInicio;
+
+        if ($App.Tipo -eq "Url") {
+            $RutaDestino = "$env:TEMP\Instalador_$(Get-Random).exe";
+            Actualizar-ProgresoRFX18 $ProcUI "Descargando instalador de $NombreApp..." $null $PorcMedio;
+
+            $Ok = Descargar-ArchivoConTimeout $ProcUI $App.IdUrl $RutaDestino $NombreApp;
+
+            if ($Ok) {
+                Actualizar-ProgresoRFX18 $ProcUI "Iniciando instalador de $NombreApp..." $null $PorcMedio;
+                Start-Process -FilePath $RutaDestino;
+                Actualizar-ProgresoRFX18 $ProcUI "$NombreApp iniciado correctamente." $null $PorcFin;
+            } else {
+                Actualizar-ProgresoRFX18 $ProcUI "No se pudo descargar $NombreApp (omitido)." $null $PorcFin;
             }
 
-            $RutaDestino = "$env:TEMP\Instalador_$(Get-Random).exe";
-            Write-Host "Descargando instalador de $NombreApp..." -ForegroundColor Yellow;
-            Invoke-WebRequest -Uri $UrlFinal -OutFile $RutaDestino;
-            Start-Process -FilePath $RutaDestino -Wait;
-        } elseif ($Item.ToolTip -eq "DescargaEscritorio") {
-            $NombreArchivo = [System.IO.Path]::GetFileName($Item.Tag);
-            $RutaEscritorio = [Environment]::GetFolderPath("Desktop");
-            $ArchivoDestino = "$RutaEscritorio\$NombreArchivo";
-            Write-Host "Descargando $NombreArchivo al Escritorio..." -ForegroundColor Yellow;
-            Invoke-WebRequest -Uri $Item.Tag -OutFile $ArchivoDestino;
-            Write-Host "Guardado con exito en el Escritorio!" -ForegroundColor Green;
-        } elseif ($Item.ToolTip -eq "Script") {
-            Invoke-RestMethod -Uri $Item.Tag | Invoke-Expression;
+        } elseif ($App.Tipo -eq "DescargaEscritorio") {
+            $EsComprimido = ($App.IdUrl -like "*.zip*" -or $App.IdUrl -like "*.rar*");
+
+            if ($EsComprimido) {$ArchivoDestino = Join-Path $CarpetaBasePortatiles "$NombreApp.zip";
+                Actualizar-ProgresoRFX18 $ProcUI "Descargando $NombreApp a HerramientasPortatiles..." $null $PorcMedio;
+            } else {
+                $RutaEscritorio = [Environment]::GetFolderPath("Desktop");
+                $ArchivoDestino = Join-Path $RutaEscritorio "$NombreApp.exe";
+                Actualizar-ProgresoRFX18 $ProcUI "Descargando $NombreApp al Escritorio..." $null $PorcMedio;
+            }
+
+            $Ok = Descargar-ArchivoConTimeout $ProcUI $App.IdUrl $ArchivoDestino $NombreApp;
+
+            if ($Ok) {
+                if ($EsComprimido) {
+                    $SeDescargaronComprimidos =$true;
+                    Actualizar-ProgresoRFX18 $ProcUI "$NombreApp guardado en HerramientasPortatiles." $null $PorcFin;
+                } else {
+                    Actualizar-ProgresoRFX18 $ProcUI "$NombreApp guardado en el Escritorio." $null $PorcFin;
+                }
+            } else {
+                Actualizar-ProgresoRFX18 $ProcUI "Fallo la descarga de $NombreApp." $null $PorcFin;
+            }
+
+        } elseif ($App.Tipo -eq "Script") {
+            Actualizar-ProgresoRFX18 $ProcUI "Ejecutando script para $NombreApp..." $null $PorcMedio;
+            $CodigoRemoto = Invoke-RestMethod -Uri$App.IdUrl;
+            Invoke-Expression $CodigoRemoto;
+            Actualizar-ProgresoRFX18 $ProcUI "Script finalizado." $null $PorcFin;
+
         } else {
-            winget install --id $Item.Tag -e --accept-package-agreements --accept-source-agreements;
+            Actualizar-ProgresoRFX18 $ProcUI "Instalando $NombreApp mediante Winget..." $null $PorcMedio;
+            $ParametrosWinget = "install --id $($App.IdUrl) -e --silent --disable-interactivity --accept-package-agreements --accept-source-agreements --force";
+            Ejecutar-ProcesoSinCongelar $ProcUI "winget.exe" $ParametrosWinget;
+            Actualizar-ProgresoRFX18 $ProcUI "$NombreApp completado via Winget." $null $PorcFin;
         }
     }
     
-    Write-Host "`n==========================================" -ForegroundColor DarkGray;
-    Write-Host "Proceso completado con exito!" -ForegroundColor Green;
-});
+    Actualizar-ProgresoRFX18 $ProcUI "Proceso de instalacion finalizado con exito." "Finalizado" 100;
     
-# Mostrar la ventana
+    $RutaPdfCraft = "C:\HerramientasPortatiles\PDFCraft.zip";
+    if (Test-Path $RutaPdfCraft) {
+        [System.Windows.MessageBox]::Show(
+            "Se descargo correctamente tu archivo en:`n`nC:\HerramientasPortatiles`n`nSe abrira la carpeta para que puedas descomprimirlo.",
+            "Archivo Listo", "OK", "Information"
+        );
+        Start-Process "explorer.exe" "/select,`"$RutaPdfCraft`"";
+    } elseif (Test-Path "C:\HerramientasPortatiles") {
+        Start-Process "explorer.exe" "C:\HerramientasPortatiles";
+    }
+
+    $ProcUI.BtnCerrar.Visibility = "Visible";
+});
+
 $Ventana.ShowDialog() >$null;
