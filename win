@@ -403,14 +403,32 @@ $XamlString = @(
     '                    </StackPanel>'
     '                </Border>'
     '            </TabItem>'
+    '            <TabItem Header=" [3] Agilizar Windows " FontSize="14" FontWeight="Bold" Foreground="#29C5F6" Background="#161F30">'
+    '                <ScrollViewer VerticalScrollBarVisibility="Auto">'
+    '                    <StackPanel Background="#111827" Margin="18">'
+    '                        <TextBlock Text="AGILIZAR WINDOWS 11" FontSize="20" FontWeight="Bold" Foreground="#29C5F6" Margin="0,0,0,8"/>'
+    '                        <TextBlock Text="Mantenimiento con confirmaciones y registro de resultados." Foreground="#9CA3AF" TextWrapping="Wrap" Margin="0,0,0,16"/>'
+    '                        <WrapPanel Margin="0,0,0,12">'
+    '                            <Button Name="BtnLimpiarTemp" Content="Limpiar temporales" MinWidth="180" Height="38" Margin="0,0,10,10" Padding="10,4" Background="#0284C7" Foreground="White"/>'
+    '                            <Button Name="BtnPapelera" Content="Vaciar papelera" MinWidth="180" Height="38" Margin="0,0,10,10" Padding="10,4" Background="#1E293B" Foreground="White"/>'
+    '                            <Button Name="BtnDNS" Content="Limpiar cache DNS" MinWidth="180" Height="38" Margin="0,0,10,10" Padding="10,4" Background="#1E293B" Foreground="White"/>'
+    '                            <Button Name="BtnDiagnostico" Content="Diagnostico del sistema" MinWidth="180" Height="38" Margin="0,0,10,10" Padding="10,4" Background="#1E293B" Foreground="White"/>'
+    '                            <Button Name="BtnOptimizar" Content="Optimizar unidad C:" MinWidth="180" Height="38" Margin="0,0,10,10" Padding="10,4" Background="#1E293B" Foreground="White"/>'
+    '                            <Button Name="BtnReparar" Content="Reparar Windows (DISM/SFC)" MinWidth="220" Height="38" Margin="0,0,10,10" Padding="10,4" Background="#9A3412" Foreground="White"/>'
+    '                        </WrapPanel>'
+    '                        <TextBlock Name="TxtEstadoAgilizar" Text="Estado: listo." Foreground="#29C5F6" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,8"/>'
+    '                        <TextBox Name="TxtLogAgilizar" Height="250" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Background="#070B10" Foreground="#E4E4E7" BorderBrush="#1E293B" Padding="8"/>'
+    '                    </StackPanel>'
+    '                </ScrollViewer>'
+    '            </TabItem>'
+
     '        </TabControl>'
     '    </Grid>'
     '</Window>'
 ) -join "`n";
 
 [xml]$XAML = $XamlString;
-$Reader = New-Object System.Xml.XmlNodeReader $XmlR -ErrorAction SilentlyContinue;
-$Reader = New-Object System.Xml.XmlNodeReader $XAML;
+$Reader = [System.Xml.XmlNodeReader]::new($XAML);
 $Ventana = [Windows.Markup.XamlReader]::Load($Reader);
 
 $PanelCategorias = $Ventana.FindName("PanelCategorias");
@@ -433,7 +451,7 @@ $TxtEstadoBooteo = $Ventana.FindName("TxtEstadoBooteo");
 $ListaCheckboxes = @();
 
 function Actualizar-Contador {
-    $Total = ($ListaCheckboxes.Where({ $_.IsChecked -eq $true })).Count;
+    $Total = @($ListaCheckboxes | Where-Object { $_.IsChecked -eq $true }).Count;
     $TxtContador.Text = "Seleccionados: $Total";
 }
 
@@ -497,19 +515,19 @@ foreach ($Cat in $Categorias.Keys) {
 $SplashUI.Window.Close();
 
 $BtnSeleccionarTodo.Add_Click({
-    $ListaCheckboxes.ForEach({ $_.IsChecked = $true });
+    foreach ($Check in $ListaCheckboxes) { $Check.IsChecked = $true }
     Actualizar-Contador;
 });
 
 $BtnLimpiar.Add_Click({
-    $ListaCheckboxes.ForEach({ $_.IsChecked = $false });
+    foreach ($Check in $ListaCheckboxes) { $Check.IsChecked = $false }
     Actualizar-Contador;
 });
 
 function Cargar-UnidadesUSB {
     $CmbUnidadesUsb.Items.Clear();
-    $TodosLosDiscos = Get-Disk;
-    $DiscosUsb = $TodosLosDiscos.Where({ $_.BusType -eq 'Usb' });
+    $TodosLosDiscos = @(Get-Disk -ErrorAction SilentlyContinue);
+    $DiscosUsb = @($TodosLosDiscos | Where-Object { $_.BusType -eq 'USB' });
     foreach ($Disco in $DiscosUsb) {
         $TamanoGB = [math]::Round($Disco.Size / 1GB, 1);
         $Item = New-Object System.Windows.Controls.ComboBoxItem;
@@ -746,5 +764,124 @@ $BtnInstalar.Add_Click({
 
     $ProcUI.BtnCerrar.Visibility = "Visible";
 });
+
+
+# --- Agilizar Windows: acciones con registro y confirmacion ---
+$BtnLimpiarTemp = $Ventana.FindName("BtnLimpiarTemp")
+$BtnPapelera = $Ventana.FindName("BtnPapelera")
+$BtnDNS = $Ventana.FindName("BtnDNS")
+$BtnDiagnostico = $Ventana.FindName("BtnDiagnostico")
+$BtnOptimizar = $Ventana.FindName("BtnOptimizar")
+$BtnReparar = $Ventana.FindName("BtnReparar")
+$TxtEstadoAgilizar = $Ventana.FindName("TxtEstadoAgilizar")
+$TxtLogAgilizar = $Ventana.FindName("TxtLogAgilizar")
+
+$CarpetaInformesRFX = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "RFX18-Informes"
+if (-not (Test-Path -LiteralPath $CarpetaInformesRFX)) {
+    New-Item -ItemType Directory -Path $CarpetaInformesRFX -Force | Out-Null
+}
+$RutaLogAgilizar = Join-Path $CarpetaInformesRFX ("Agilizar-Windows-" + (Get-Date -Format "yyyyMMdd-HHmmss") + ".csv")
+$RegistrosAgilizar = New-Object System.Collections.Generic.List[object]
+
+function Registrar-AgilizarRFX18 {
+    param([string]$Accion, [string]$Resultado, [string]$Detalle)
+    $Registro = [PSCustomObject]@{
+        Fecha = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+        Accion = $Accion
+        Resultado = $Resultado
+        Detalle = $Detalle
+    }
+    $RegistrosAgilizar.Add($Registro)
+    $Registro | Export-Csv -LiteralPath $RutaLogAgilizar -NoTypeInformation -Encoding UTF8 -Append
+    if ($TxtLogAgilizar) {
+        $TxtLogAgilizar.AppendText("[$($Registro.Fecha)] $Accion - $Resultado`: $Detalle`r`n")
+        $TxtLogAgilizar.ScrollToEnd()
+    }
+    if ($TxtEstadoAgilizar) { $TxtEstadoAgilizar.Text = "$Accion - $Resultado. Informe: $RutaLogAgilizar" }
+}
+
+$BtnLimpiarTemp.Add_Click({
+    $Confirmar = [System.Windows.MessageBox]::Show(
+        "Se eliminaran archivos temporales de tu usuario. Los archivos en uso se omitiran. ¿Continuar?",
+        "Confirmar limpieza", "YesNo", "Warning")
+    if ($Confirmar -ne "Yes") { return }
+    try {
+        $TempUsuario = [IO.Path]::GetTempPath()
+        $Antes = (Get-ChildItem -LiteralPath $TempUsuario -Force -ErrorAction SilentlyContinue | Measure-Object).Count
+        Get-ChildItem -LiteralPath $TempUsuario -Force -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+        Registrar-AgilizarRFX18 "Limpiar temporales" "Completado" "Se intento limpiar $TempUsuario; elementos encontrados antes: $Antes. Los archivos bloqueados se omitieron."
+    } catch {
+        Registrar-AgilizarRFX18 "Limpiar temporales" "Error" $_.Exception.Message
+    }
+})
+
+$BtnPapelera.Add_Click({
+    $Confirmar = [System.Windows.MessageBox]::Show(
+        "Esto vaciara la Papelera de reciclaje y eliminara sus elementos. ¿Deseas continuar?",
+        "Confirmar vaciado de papelera", "YesNo", "Warning")
+    if ($Confirmar -ne "Yes") { return }
+    try {
+        Clear-RecycleBin -Force -ErrorAction Stop
+        Registrar-AgilizarRFX18 "Vaciar papelera" "Completado" "Se ejecuto Clear-RecycleBin."
+    } catch {
+        Registrar-AgilizarRFX18 "Vaciar papelera" "Error" $_.Exception.Message
+    }
+})
+
+$BtnDNS.Add_Click({
+    try {
+        $SalidaDNS = ipconfig.exe /flushdns 2>&1 | Out-String
+        Registrar-AgilizarRFX18 "Limpiar cache DNS" "Ejecutado" ($SalidaDNS.Trim())
+    } catch {
+        Registrar-AgilizarRFX18 "Limpiar cache DNS" "Error" $_.Exception.Message
+    }
+})
+
+$BtnDiagnostico.Add_Click({
+    try {
+        $OS = Get-CimInstance Win32_OperatingSystem -ErrorAction Stop
+        $CPU = Get-CimInstance Win32_Processor -ErrorAction SilentlyContinue | Select-Object -First 1
+        $DiscoC = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'" -ErrorAction Stop
+        $LibreGB = [math]::Round($DiscoC.FreeSpace / 1GB, 2)
+        $TotalGB = [math]::Round($DiscoC.Size / 1GB, 2)
+        $RAMLibreGB = [math]::Round($OS.FreePhysicalMemory / 1MB, 2)
+        $Detalle = "Windows: $($OS.Caption); CPU: $($CPU.Name); RAM libre aproximada: $RAMLibreGB GB; C: libre $LibreGB GB de $TotalGB GB."
+        Registrar-AgilizarRFX18 "Diagnostico del sistema" "Completado" $Detalle
+        [System.Windows.MessageBox]::Show($Detalle, "Diagnóstico RFX18", "OK", "Information") | Out-Null
+    } catch {
+        Registrar-AgilizarRFX18 "Diagnostico del sistema" "Error" $_.Exception.Message
+    }
+})
+
+$BtnOptimizar.Add_Click({
+    $Confirmar = [System.Windows.MessageBox]::Show(
+        "Se ejecutara Optimize-Volume en C: con la optimizacion recomendada por Windows. ¿Continuar?",
+        "Confirmar optimización", "YesNo", "Warning")
+    if ($Confirmar -ne "Yes") { return }
+    try {
+        Optimize-Volume -DriveLetter C -Verbose -ErrorAction Stop 4>&1 | Out-String | ForEach-Object { $DetalleOpt = $_ }
+        Registrar-AgilizarRFX18 "Optimizar unidad C:" "Completado" "Se solicito a Windows optimizar C: mediante Optimize-Volume. Revisa el estado del volumen si necesitas confirmar el resultado detallado."
+    } catch {
+        Registrar-AgilizarRFX18 "Optimizar unidad C:" "Error" $_.Exception.Message
+    }
+})
+
+$BtnReparar.Add_Click({
+    $Confirmar = [System.Windows.MessageBox]::Show(
+        "DISM y SFC comprobaran y repararan archivos del sistema. Puede tardar bastante. Se recomienda ejecutar RFX18 como administrador. ¿Continuar?",
+        "Confirmar reparación de Windows", "YesNo", "Warning")
+    if ($Confirmar -ne "Yes") { return }
+    try {
+        $TxtEstadoAgilizar.Text = "Ejecutando DISM /Online /Cleanup-Image /RestoreHealth..."
+        $DISM = Start-Process -FilePath "dism.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -Wait -PassThru -NoNewWindow
+        Registrar-AgilizarRFX18 "DISM RestoreHealth" $(if ($DISM.ExitCode -eq 0) { "Completado" } else { "Código $($DISM.ExitCode)" }) "DISM terminó. Código de salida: $($DISM.ExitCode)."
+        $TxtEstadoAgilizar.Text = "Ejecutando sfc /scannow..."
+        $SFC = Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -Wait -PassThru -NoNewWindow
+        Registrar-AgilizarRFX18 "SFC scannow" $(if ($SFC.ExitCode -eq 0) { "Completado" } else { "Código $($SFC.ExitCode)" }) "SFC terminó. Código de salida: $($SFC.ExitCode)."
+    } catch {
+        Registrar-AgilizarRFX18 "Reparar Windows" "Error" $_.Exception.Message
+    }
+})
+# --- Fin Agilizar Windows ---
 
 $Ventana.ShowDialog() >$null;
